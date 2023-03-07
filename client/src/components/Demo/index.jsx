@@ -9,7 +9,7 @@ import NoticeNoArtifact from "./NoticeNoArtifact";
 import NoticeWrongNetwork from "./NoticeWrongNetwork";
 
 
-const Demo = () => {
+export const Demo = () => {
   const { state } = useEth();
   const [value, setValue] = useState("?");
   const [text, setText] = useState("''");
@@ -36,4 +36,3 @@ const Demo = () => {
   );
 }
 
-export default Demo;
