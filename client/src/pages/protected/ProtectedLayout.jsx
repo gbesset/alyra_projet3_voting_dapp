@@ -6,7 +6,7 @@ import { EthProvider } from "../../contexts/EthContext";
 export const ProtectedLayout = () => {
     return (
         <EthProvider> 
-             <div className="notification is-danger">
+             <div>
                 <Outlet/>
             </div>
         </EthProvider> 
