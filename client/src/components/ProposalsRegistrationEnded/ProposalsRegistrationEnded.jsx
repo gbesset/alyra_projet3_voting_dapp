@@ -2,10 +2,10 @@ import React from 'react';
 
 export const ProposalsRegistrationEnded = () => {
     return (
-        <div class="debug">
+        <div className="debug">
             <h1 className="title">Proposals Registration Ended</h1>
             <p>Here are the proposals, choose one for the vote</p>
-            <table class="table">
+            <table className="table">
                 <thead>
                     <tr>
                         <th><abbr title="id">Id</abbr></th>

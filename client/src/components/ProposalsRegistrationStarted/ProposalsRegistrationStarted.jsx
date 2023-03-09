@@ -2,7 +2,7 @@ import React from 'react';
 
 export const ProposalsRegistrationStarted = () => {
     return (
-        <div class="debug">
+        <div className="debug">
             <h1 className='title'>Proposals registration started</h1>
             <p>You can now make some proposals.....</p>
             <div>
