@@ -20,7 +20,6 @@ function EthProvider({ children }) {
           contract = new web3.eth.Contract(abi, address);
           if(contract && accounts){
             const owner = await contract.methods.owner().call({ from: accounts[0] });
-            console.log(owner +"  --  "+accounts[0]);
             accounts[0] === owner ? isOwner=true : isOwner=false;
           }
         } catch (err) {
