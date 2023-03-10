@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { ProposalsRegistrationEnded } from '../../components/ProposalsRegistrationEnded/ProposalsRegistrationEnded';
 import { ProposalsRegistrationStarted } from '../../components/ProposalsRegistrationStarted/ProposalsRegistrationStarted';
-import { RegisteringVoters } from '../../components/RegisteringVoters/RegisteringVoters';
+import { RegisteringVoters } from '../../components/RegisteringVoters/index';
 import { WorkflowStatus } from '../../components/WorkflowStatus';
 import { useEth } from '../../contexts/EthContext';
 import { Account } from '../../components/Account/Account';
 
 export const Voter = () => {
-    const { state: { contract, accounts} } = useEth();
-    const [isAuthent, setIsAuthent] = useState(false);
-    const [workflowStatus, setWorkflowStatus] = useState(0);
-    const [account, setAccount] = useState("");
+    const { state: { contract, accounts, artifact, isOwner} } = useEth();
+
+    const [workflowStatus, setWorkflowStatus] = useState(0);    //workflowStatus
+   
+  
     
     const refreshStatus = async () => {
         alert('refresh status');
@@ -26,15 +27,10 @@ export const Voter = () => {
                refreshStatus()
             }
         }
-        async function getAccount(){
-            if(accounts){
-                setAccount(accounts[0]);
-            }
-        }
-
-        getAccount();
-        getWorkflowStatus();
-    }, [accounts, contract]);
+      
+          //getAccount();
+       // getWorkflowStatus();
+    }, [accounts, contract, artifact]);
 
 
     function handleStatusChange(newStatus){
@@ -44,14 +40,14 @@ export const Voter = () => {
     return (
         <div>
             <h1 className="title">Voting Dapp</h1>
-            <WorkflowStatus workflowStatus={workflowStatus} onStatusChange={handleStatusChange}/>
+            <WorkflowStatus workflowStatus={workflowStatus} />
             {accounts ? (
                 <>
-                    <Account account={account}/>
+                    <Account account={accounts}  isOwner={isOwner}/>
                     <br/>
                     <p className="debug">Le status est {workflowStatus}</p>
                     <br/>
-                    {workflowStatus==0 ? <RegisteringVoters/>: ''}
+                    {workflowStatus==0 ? <RegisteringVoters setWorkflowStatus={setWorkflowStatus}/>: ''}
                     <br/>
                     {workflowStatus==1 ?<ProposalsRegistrationStarted/>: '' }
                     <br />

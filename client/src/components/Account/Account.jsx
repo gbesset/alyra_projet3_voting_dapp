@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-export const Account = ({account}) => {
+export const Account = ({account, isOwner}) => {
     return (
         <div>
             
-            You are connected with this address : {account} 
+            You are connected with this address : {account} and {isOwner==true?'is owner':'is not owner'}
         </div>
     );
 };
