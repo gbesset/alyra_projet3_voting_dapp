@@ -12,12 +12,12 @@ export const Home = () => {
                 <div className="column">
                 <div className="is-flex is-flex-direction-column is-justify-content-center h-100">
                 <h1 className="title">Projet #3 Dapp Voting</h1>
-                <p className="subtitle pt-2">Developed by:
+                <div className="subtitle pt-2">Developed by:
                     <ul className="pl-2">
                         <li className="pt-2">Guillaume Besset</li>
                         <li className="pt-2">Eli Gonzalez Zarate</li>
                     </ul> 
-                </p>
+                </div>
                 </div>
                 </div>
             </div>

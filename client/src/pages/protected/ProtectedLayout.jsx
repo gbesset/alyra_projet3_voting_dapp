@@ -1,14 +1,17 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { EthProvider } from "../../contexts/EthContext";
-
+import { Footer } from '../../components/Footer/Footer';
+import { Header } from '../../components/Header/Header';
 
 export const ProtectedLayout = () => {
     return (
-        <EthProvider> 
-             <div>
+        <>
+            <Header/>     
+             <div className="container">
                 <Outlet/>
             </div>
-        </EthProvider> 
+            
+            <Footer/>
+        </>
     );
 };
