@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 import { RegisterVoterForm } from './RegisterVoterForm';
 import WhiteListeList from './WhiteListeList';
+import {WORKFLOW_STATUS} from '../../utils/utils.js'
 
-export const RegisteringVoters = () => {
+export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
     const { state: { contract, accounts, artifact, isOwner} } = useEth();
 
    
     
-/*
-    useEffect(()=>{
-        async function getPha
-    },[accounts, contract, artifact])*/
+    function handleStatusChange(){
+        upgradeWorkflowStatus(WORKFLOW_STATUS.ProposalsRegistrationStarted);
+    }
 
 
     return (
@@ -20,6 +20,10 @@ export const RegisteringVoters = () => {
             isOwner ? (
             <>
                 <h1 className='title'>Registering voters</h1>
+                <div className='has-text-right'>
+                    <button className="button is-primary" onClick={handleStatusChange}>Change state</button>
+                </div>
+
                 <RegisterVoterForm />
 
                 <WhiteListeList/>
