@@ -5,6 +5,7 @@ import { RegisteringVoters } from '../../components/RegisteringVoters/index';
 import { WorkflowStatus } from '../../components/WorkflowStatus';
 import { useEth } from '../../contexts/EthContext';
 import { Account } from '../../components/Account/Account';
+import {WORKFLOW_STATUS} from '../../utils/utils.js'
 
 export const Voter = () => {
     const { state: { contract, accounts, artifact, isOwner} } = useEth();
@@ -34,7 +35,26 @@ export const Voter = () => {
 
 
     function handleStatusChange(newStatus){
-        setWorkflowStatus(newStatus);
+
+        if(workflowStatus == WORKFLOW_STATUS.RegisteringVoters  && newStatus==WORKFLOW_STATUS.ProposalsRegistrationStarted){
+            setWorkflowStatus(newStatus);
+        }
+        else if(workflowStatus == WORKFLOW_STATUS.ProposalsRegistrationStarted  && newStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded){
+            setWorkflowStatus(newStatus);
+        }
+        else if(workflowStatus == WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus==WORKFLOW_STATUS.VotingSessionStarted){
+            setWorkflowStatus(newStatus);
+        }
+        else if(workflowStatus == WORKFLOW_STATUS.VotingSessionStarted  && newStatus==WORKFLOW_STATUS.VotingSessionEnded){
+            setWorkflowStatus(newStatus);
+        }
+        else if(workflowStatus == WORKFLOW_STATUS.VotingSessionEnded  && newStatus==WORKFLOW_STATUS.VotesTallied){
+            setWorkflowStatus(newStatus);
+        }
+        else{
+            alert('Impossible de changer de status...')
+        }
+        
     }
 
     return (
@@ -47,7 +67,7 @@ export const Voter = () => {
                     <br/>
                     <p className="debug">Le status est {workflowStatus}</p>
                     <br/>
-                    {workflowStatus==0 ? <RegisteringVoters setWorkflowStatus={setWorkflowStatus}/>: ''}
+                    {workflowStatus==0 ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
                     <br/>
                     {workflowStatus==1 ?<ProposalsRegistrationStarted/>: '' }
                     <br />

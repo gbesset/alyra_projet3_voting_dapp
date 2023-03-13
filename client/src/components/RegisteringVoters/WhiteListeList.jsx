@@ -12,32 +12,31 @@ const WhiteListeList = () => {
               
                contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"})
                .then(results => {
-                let wl=[];
-                results.forEach(event => {
-                    wl.push(event.returnValues.voterAddress);    
-                });
-                    //const votersAddress = results.map((voter) => voter.returnValues.voterAddress);
-                    //setWhiteList(votersAddress)
-                setWhiteList(wl);
+                    let votersAddress=[];
+                    results.forEach(event => {
+                        votersAddress.push(event.returnValues.voterAddress);    
+                    });
+                    setWhiteList(votersAddress);
+
+                    /*
+                    TODO erreur : in a list should have a unique "key" prop.
+                    let votersAddress = results.map((event,index) => {
+                        return {voterAddress: event.returnValues.voterAddress, key:index}
+                    });
+                    setWhiteList(votersAddress)
+                    */
+        
                 })
                .catch(err => console.log(err));
-
             }
-
-            await contract.events.VoterRegistered({fromBlock:"earliest"})
-                .on('data', event => {
-                    console.log(event.returnValues.voterAddress);
-                })          
-                .on('changed', changed => console.log(changed))
-                .on('error', err => console.log(err))
-                .on('connected', str => console.log(str))
         }
 
         retrieveRegisteringVotersEvents();
-    }, [contract, accounts])
+    }, [contract, accounts, whiteList])
 
     return (
         <>
+
         {whiteList ==0?
         (
             <p>No events.....</p>
