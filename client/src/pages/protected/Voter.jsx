@@ -8,14 +8,14 @@ import { Account } from '../../components/Account/Account';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
 
 export const Voter = () => {
-    const { state: { contract, accounts, artifact, isOwner} } = useEth();
+    const { state: { contract, accounts, artifact, isOwner, web3} } = useEth();
 
     const [workflowStatus, setWorkflowStatus] = useState(0);    //workflowStatus
    
   
     
     const refreshStatus = async () => {
-        alert('refresh status');
+        //alert('refresh status');
         const status = await contract.methods.workflowStatus().call({ from: accounts[0] });
         setWorkflowStatus(parseInt(status));
         //props.onStatusChange(parseInt(status));
@@ -29,14 +29,15 @@ export const Voter = () => {
             }
         }
       
-          //getAccount();
-       // getWorkflowStatus();
-    }, [accounts, contract, artifact]);
+   
+        getWorkflowStatus();
+    }, [accounts, contract, artifact, workflowStatus]);
 
 
-    function handleStatusChange(newStatus){
+    async function handleStatusChange(newStatus){
 
         if(workflowStatus == WORKFLOW_STATUS.RegisteringVoters  && newStatus==WORKFLOW_STATUS.ProposalsRegistrationStarted){
+            await contract.methods.startProposalsRegistering().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus == WORKFLOW_STATUS.ProposalsRegistrationStarted  && newStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded){
