@@ -35,12 +35,14 @@ export const Voter = () => {
 
 
     async function handleStatusChange(newStatus){
+alert("hello" + workflowStatus + "on demande "+newStatus)
 
         if(workflowStatus === WORKFLOW_STATUS.RegisteringVoters  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted){
             await contract.methods.startProposalsRegistering().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationStarted  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded){
+            await contract.methods.endProposalsRegistering().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus===WORKFLOW_STATUS.VotingSessionStarted){

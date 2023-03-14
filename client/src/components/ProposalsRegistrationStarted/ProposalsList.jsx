@@ -10,17 +10,42 @@ export const ProposalList = () => {
     useEffect(() =>{
         async function retrieveProposalRegisteredOldEvents(){
             if(contract){
-              contract.getPastEvents("ProposalRegistered", {fromBlock:0, toBlock:"latest"})
-               .then(results => {
-                    const proposals = results.map((event)=>event.returnValues.proposalId)
-                    setProposalList(proposals);
-                })
-               .catch(err => console.log(err));
+                //retrieve all past events
+                const proposalRegisteredEvents = await contract.getPastEvents("ProposalRegistered", {fromBlock:0, toBlock:"latest"});
+              
+                //retrieve all past events IDs
+                const eventProposalIdList = proposalRegisteredEvents.map((event)=>event.returnValues.proposalId)
+                    
+                //retrieve all past events datas (desrciption, address)    
+                let proposalListTmp = [];
+                for(let id of eventProposalIdList){
+                    const proposal = await contract.methods.getOneProposal(id).call({from:accounts[0]});
+                    proposalListTmp.push(
+                        {
+                            id: id,
+                            description:proposal.description,
+                            voteCount: proposal.voteCount
+                        }
+                    )
+                }
+                /*eventProposalIdList.forEach(async id => {
+                    const proposal = await contract.methods.getOneProposal(id).call({from:accounts[0]});
+                    proposalListTmp.push(
+                        {
+                            id: id,
+                            description:proposal.desciption,
+                            voteCount: proposal.voteCount
+                        }
+                    )
+                });*/
+                    console.log(proposalListTmp)
+                setProposalList([...proposalListTmp]);
+                
             }
         }
 
         retrieveProposalRegisteredOldEvents();
-    }, [contract, accounts, proposalList])
+    }, [contract, accounts])
 
     useEffect(() =>{
         async function retrieveProposalRegisteredEvent(){
@@ -49,10 +74,9 @@ export const ProposalList = () => {
                             <table className="table is-fullwidth">
                         <thead>
                             <tr>
-                                <th><abbr title="id">Id</abbr></th>
                                 <th><abbr title="address">Proposal id</abbr></th>
                                 <th><abbr title="address">Proposal</abbr></th>
-                                <th><abbr title="address">address</abbr></th>
+                                <th><abbr title="address">voteCount</abbr></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,10 +84,9 @@ export const ProposalList = () => {
                                 proposalList.map((p, index) => {
                                     return(
                                     <tr>
-                                        <td>{index}</td>
-                                        <td>{p}</td>
-                                        <td>{p}</td>
-                                        <td>{p}</td>
+                                        <td>{p.id}</td>
+                                        <td>{p.description}</td>
+                                        <td>{p.voteCount}</td>
                                     </tr>
                                 )}
                             )}
