@@ -19,8 +19,8 @@ export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
             {
             isOwner ? (
             <>
-                <h1 className='title'>Registering voters</h1>
-                <div className='has-text-right'>
+                <div className="is-flex is-flex-direction-row is-justify-content-space-between is-align-items-center">
+                    <h1 className='title'>Registering voters</h1>
                     <button className="button is-primary" onClick={handleStatusChange}>Change state</button>
                 </div>
 
