@@ -4,18 +4,19 @@ import { NotFound } from '../pages/NotFound';
 import { Admin } from '../pages/protected/Admin';
 import { ProtectedLayout } from '../pages/protected/ProtectedLayout';
 import { Voter } from '../pages/protected/Voter';
-import {SimpleStorage} from '../pages/protected/SimpleStorage'
+import { EthProvider } from "../contexts/EthContext";
 
 export const ProtectedRouter = () => {
     return (
-        <Routes>
-            <Route element={<ProtectedLayout/>}>
-                <Route path="/voter" element={<Voter />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/simpleStorage" element={<SimpleStorage />} />
+        <EthProvider>
+            <Routes>
+                <Route element={<ProtectedLayout/>}>
+                    <Route path="/voter" element={<Voter />} />
+                    <Route path="/admin" element={<Admin />} />
 
-                <Route path="*" element={<NotFound />} />
-            </Route>
-        </Routes>
+                    <Route path="*" element={<NotFound />} />
+                </Route>
+            </Routes>
+        </EthProvider>
     );
 };

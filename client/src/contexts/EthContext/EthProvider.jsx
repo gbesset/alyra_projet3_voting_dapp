@@ -14,15 +14,20 @@ function EthProvider({ children }) {
         const networkID = await web3.eth.net.getId();
         const { abi } = artifact;
         let address, contract;
+        let isOwner = false;
         try {
           address = artifact.networks[networkID].address;
           contract = new web3.eth.Contract(abi, address);
+          if(contract && accounts){
+            const owner = await contract.methods.owner().call({ from: accounts[0] });
+            accounts[0] === owner ? isOwner=true : isOwner=false;
+          }
         } catch (err) {
           console.error(err);
         }
         dispatch({
           type: actions.init,
-          data: { artifact, web3, accounts, networkID, contract }
+          data: { artifact, web3, accounts, networkID, contract, isOwner }
         });
       }
     }, []);
@@ -30,7 +35,7 @@ function EthProvider({ children }) {
   useEffect(() => {
     const tryInit = async () => {
       try {
-        const artifact = require("../../contracts/SimpleStorage.json");
+        const artifact = require("../../contracts/Voting.json");
         init(artifact);
       } catch (err) {
         console.error(err);
