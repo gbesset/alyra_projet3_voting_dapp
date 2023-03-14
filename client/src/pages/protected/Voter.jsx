@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ProposalsRegistrationEnded } from '../../components/ProposalsRegistrationEnded/ProposalsRegistrationEnded';
-import { ProposalsRegistrationStarted } from '../../components/ProposalsRegistrationStarted/ProposalsRegistrationStarted';
+import { ProposalsRegistrationStarted } from '../../components/ProposalsRegistrationStarted/index';
 import { RegisteringVoters } from '../../components/RegisteringVoters/index';
 import { WorkflowStatus } from '../../components/WorkflowStatus';
 import { useEth } from '../../contexts/EthContext';
@@ -36,20 +36,20 @@ export const Voter = () => {
 
     async function handleStatusChange(newStatus){
 
-        if(workflowStatus == WORKFLOW_STATUS.RegisteringVoters  && newStatus==WORKFLOW_STATUS.ProposalsRegistrationStarted){
+        if(workflowStatus === WORKFLOW_STATUS.RegisteringVoters  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted){
             await contract.methods.startProposalsRegistering().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
-        else if(workflowStatus == WORKFLOW_STATUS.ProposalsRegistrationStarted  && newStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded){
+        else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationStarted  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded){
             setWorkflowStatus(newStatus);
         }
-        else if(workflowStatus == WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus==WORKFLOW_STATUS.VotingSessionStarted){
+        else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus===WORKFLOW_STATUS.VotingSessionStarted){
             setWorkflowStatus(newStatus);
         }
-        else if(workflowStatus == WORKFLOW_STATUS.VotingSessionStarted  && newStatus==WORKFLOW_STATUS.VotingSessionEnded){
+        else if(workflowStatus === WORKFLOW_STATUS.VotingSessionStarted  && newStatus===WORKFLOW_STATUS.VotingSessionEnded){
             setWorkflowStatus(newStatus);
         }
-        else if(workflowStatus == WORKFLOW_STATUS.VotingSessionEnded  && newStatus==WORKFLOW_STATUS.VotesTallied){
+        else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
             setWorkflowStatus(newStatus);
         }
         else{
@@ -68,11 +68,11 @@ export const Voter = () => {
                     <br/>
                     <p className="debug">Le status est {workflowStatus}</p>
                     <br/>
-                    {workflowStatus==0 ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
+                    {workflowStatus==WORKFLOW_STATUS.RegisteringVoters ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
                     <br/>
-                    {workflowStatus==1 ?<ProposalsRegistrationStarted/>: '' }
+                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationStarted ?<ProposalsRegistrationStarted upgradeWorkflowStatus={handleStatusChange}/>: '' }
                     <br />
-                    {workflowStatus==2 ?<ProposalsRegistrationEnded /> : '' }
+                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded /> : '' }
                   </>
                 ) : (
                     <p>Need to connect with your wallet...</p>

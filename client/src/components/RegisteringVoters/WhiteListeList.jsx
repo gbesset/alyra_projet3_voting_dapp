@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
 const WhiteListeList = () => {
-    const { state: {accounts, contract,  web3} } = useEth();
+    const { state: {accounts, contract} } = useEth();
 
     const [whiteList, setWhiteList] = useState([]);
 
@@ -37,7 +37,7 @@ const WhiteListeList = () => {
     return (
         <>
 
-        {whiteList ==0?
+        {whiteList && Array.isArray(whiteList)?
         (
             <p>No events.....</p>
         ) :  (  
