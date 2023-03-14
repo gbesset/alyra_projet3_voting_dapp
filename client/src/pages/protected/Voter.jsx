@@ -46,6 +46,7 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus===WORKFLOW_STATUS.VotingSessionStarted){
+            await contract.methods.startVotingSession().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionStarted  && newStatus===WORKFLOW_STATUS.VotingSessionEnded){
@@ -74,7 +75,7 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
                     <br/>
                     {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationStarted ?<ProposalsRegistrationStarted upgradeWorkflowStatus={handleStatusChange}/>: '' }
                     <br />
-                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded /> : '' }
+                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
                   </>
                 ) : (
                     <p>Need to connect with your wallet...</p>
