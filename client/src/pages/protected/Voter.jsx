@@ -53,6 +53,7 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionStarted  && newStatus===WORKFLOW_STATUS.VotingSessionEnded){
+            await contract.methods.endVotingSession().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
