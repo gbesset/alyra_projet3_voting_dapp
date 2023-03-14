@@ -6,6 +6,9 @@ import { WorkflowStatus } from '../../components/WorkflowStatus';
 import { useEth } from '../../contexts/EthContext';
 import { Account } from '../../components/Account/Account';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
+import { VotingSessionStarted } from '../../components/VotingSessionStarted';
+import { VotingSessionEnded } from '../../components/VotingSessionEnded';
+import { VotesTallied } from '../../components/VotesTallied';
 
 export const Voter = () => {
     const { state: { contract, accounts, artifact, isOwner, web3} } = useEth();
@@ -71,11 +74,17 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
                     <br/>
                     <p className="debug">Le status est {workflowStatus}</p>
                     <br/>
-                    {workflowStatus==WORKFLOW_STATUS.RegisteringVoters ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
+                    {workflowStatus===WORKFLOW_STATUS.RegisteringVoters ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
                     <br/>
-                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationStarted ?<ProposalsRegistrationStarted upgradeWorkflowStatus={handleStatusChange}/>: '' }
+                    {workflowStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted ?<ProposalsRegistrationStarted upgradeWorkflowStatus={handleStatusChange}/>: '' }
                     <br />
-                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
+                    {workflowStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
+                    <br />
+                    {workflowStatus===WORKFLOW_STATUS.VotingSessionStarted ?<VotingSessionStarted upgradeWorkflowStatus={handleStatusChange}/> : '' }
+                    <br />
+                    {workflowStatus===WORKFLOW_STATUS.VotingSessionEnded ?<VotingSessionEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
+                    <br />
+                    {workflowStatus===WORKFLOW_STATUS.VotesTallied ?<VotesTallied upgradeWorkflowStatus={handleStatusChange}/> : '' }
                   </>
                 ) : (
                     <p>Need to connect with your wallet...</p>
