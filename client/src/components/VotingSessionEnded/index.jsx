@@ -1,13 +1,14 @@
 import React from 'react';
 import { useEth } from '../../contexts/EthContext';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
+import { VoteList } from '../VotingSessionStarted/VoteList';
 
 export const VotingSessionEnded = ({upgradeWorkflowStatus}) => {
     const { state: { contract, accounts, artifact, isOwner} } = useEth();
 
 
     function handleStatusChange(){
-        upgradeWorkflowStatus(WORKFLOW_STATUS.VotingSessionEnded);
+        upgradeWorkflowStatus(WORKFLOW_STATUS.VotesTallied);
     }
 
     return (
@@ -19,7 +20,8 @@ export const VotingSessionEnded = ({upgradeWorkflowStatus}) => {
                     { isOwner ? ( <button className="button is-primary" onClick={handleStatusChange}>Change state</button>) : ('')}
                 </div>
 
-                wait for results
+               <h2 className="subtitle">Wait for the results.....</h2>
+               <VoteList />
                
             </>
             

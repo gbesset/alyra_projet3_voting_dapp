@@ -57,6 +57,7 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
+            await contract.methods.tallyVotes().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else{
