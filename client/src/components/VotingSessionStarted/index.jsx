@@ -6,35 +6,27 @@ import { VoteForm } from './VoteForm';
 import { VoteList } from './VoteList';
 
 export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, accounts, artifact, isOwner} } = useEth();
+    const { state: { contract, accounts, artifact, isOwner, isVoter} } = useEth();
 
     const [displayProposals, setDisplayProposals] = useState(false);
     const [voter, setVoter] = useState('');
-    const [isVoter, setIsVoter] = useState(false);
+    const [hasVoted, setHasVoted] = useState(false);
+
 
     useEffect(()=>{
         async function getVoter(){
             if(contract){
 
-                //Need to retrieve whitelist in events because getVoter is for OnlyVoter.
-                const VoterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
-                
-                //find if addres is Whiiltelisted
-                const whiteListVoterAddressEvent =  VoterRegisteredEvents.find((event)=>event.returnValues.voterAddress === accounts[0]);                   
-                 
-                if(whiteListVoterAddressEvent){
-                    // voter is whitelisted
-                    const whiteListAddress = whiteListVoterAddressEvent.returnValues.voterAddress;
-                    setIsVoter(true);
-
+                if(isVoter){
                     //retrieve voter info
-                    const voter = await contract.methods.getVoter(whiteListAddress).call({from: accounts[0]});
+                    const voter = await contract.methods.getVoter(accounts[0]).call({from: accounts[0]});
             
                     setVoter({
                         isRegistered: voter.isRegistered,
                         hasVoted: voter.hasVoted,
                         votedProposalId:voter.votedProposalId
                     })
+                    setHasVoted(voter.hasVoted);
                 }
                 else{
                     alert("You are not whitelisted")
@@ -44,6 +36,15 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
 
         getVoter();
     },[]);
+
+    function voterVote(proposalId){
+        setVoter({
+            isRegistered: voter.isRegistered,
+            hasVoted: true,
+            votedProposalId:proposalId
+        })
+        setHasVoted(true);
+    }
 
     function handleStatusChange(){
         upgradeWorkflowStatus(WORKFLOW_STATUS.VotingSessionEnded);
@@ -58,9 +59,14 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                 </div>
                 <div className="columns mt-5 is-centered">
                     <div className="column is-half has-text-centered">
-                        { isVoter? <VoteForm /> : (
+                        { 
+                        hasVoted ? (
+                            <p>You voted for {voter.votedProposalId}</p>    
+                        )
+                        :(
+                            isVoter? <VoteForm /> : (
                             <p>You are not whitelisted and can't vote...</p>    
-                        )}
+                        ))}
 
                     </div>
                     <div className="column is-half  has-text-centered">
