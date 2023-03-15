@@ -8,7 +8,7 @@ export const VoteList = () => {
     const [voteList, setVoteList] = useState([]);
 
     useEffect(() =>{
-        async function retrieveVotedEvents(){
+        async function retrieveVotedPastEvents(){
             if(contract){
             
                 const votedEvents = await contract.getPastEvents("Voted", {fromBlock:0, toBlock:"latest"});
@@ -25,19 +25,33 @@ export const VoteList = () => {
               
             }
         }
+        async function retrieveVotedEvent(){
+            if(contract){
+              contract.events.Voted({fromBlock:"earliest"})
+              .on('data', event => {
+                retrieveVotedPastEvents();
+                })          
+              .on('changed', changed => console.log(changed))
+              .on('error', err => console.log(err))
+              .on('connected', str => console.log(str))
+            }
+        }
 
-        retrieveVotedEvents();
-    }, [contract, accounts, voteList])
+
+
+        retrieveVotedPastEvents();
+        retrieveVotedEvent();
+    }, [contract, accounts])
 
 
     return (
         <>
-        {voteList && Array.isArray(voteList)?(
             <div className="columns">
                 <div className="column is-one-quarter">
                     
                 </div>
                 <div className="column is-half">
+                {voteList && Array.isArray(voteList) && voteList.length>0?(
                         <table className="table is-fullwidth">
                     <thead>
                         <tr>
@@ -50,7 +64,7 @@ export const VoteList = () => {
                         {
                             voteList.map((v, index) => {
                                 return(
-                                <tr>
+                                <tr key={index}>
                                     <td>{index}</td>
                                     <td>{v.voter}</td>
                                     <td>{v.proposalId}</td>
@@ -59,16 +73,17 @@ export const VoteList = () => {
                         )}
                     </tbody>
                 </table>
+                 ) :  (  
+                    <div>
+                        <p className="subtitle">There is no vote at the moment</p>
+                    </div>
+                )   }
                 </div>
                 <div className="column is-one-quarter">
                 
                 </div>
             </div>
-        ) :  (  
-            <div>
-                <p>No votes for now</p>
-            </div>
-        )   }
+       
     </>
     );
 };

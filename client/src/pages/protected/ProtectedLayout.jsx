@@ -7,7 +7,7 @@ export const ProtectedLayout = () => {
     return (
         <>
             <Header/>     
-             <div className="container">
+             <div className="container min-height">
                 <Outlet/>
             </div>
             

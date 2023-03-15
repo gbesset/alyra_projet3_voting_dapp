@@ -13,7 +13,7 @@ export const ProposalForm = () => {
     const handleAdd = async() =>{
         if(proposal && proposal.length>0){
             await contract.methods.addProposal(proposal).send({from:accounts[0]});
-            //ProposalRegistered !
+            setProposal('');
         }else{
               alert("invalid proposal")
             }
@@ -22,11 +22,11 @@ export const ProposalForm = () => {
 
     return (
         <div className="field">
-            <label className="label">Add a proposal</label>
+            <label className="subtitle ml-5">Add a proposal</label>
             <div className="columns">
                 <div className="column is-half">
-                    <div className="control">
-                        <input className="input is-success" value={proposal} onChange={handleProposalChange} type="text" placeholder="Address to whitelist" />
+                    <div className="control ml-5">
+                        <input className="input is-success" value={proposal} onChange={handleProposalChange} type="text" placeholder="your proposal" />
                     </div>
                 </div>
                 <div className="column">

@@ -1,52 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
-const WhiteListeList = () => {
-    const { state: {accounts, contract} } = useEth();
+ const WhiteListeList = () => {
+    const { state: {accounts, contract, isVoter} } = useEth();
+
+    //const [isWhiteListed, setIsWhiteListed] = useState(false);
 
     const [whiteList, setWhiteList] = useState([]);
 
     useEffect(() =>{
-        async function retrieveRegisteringVotersEvents(){
+
+        /**
+         * retrieve all past VoterRegistered events
+         */
+        async function retrieveRegisteringVotersPastEvents(){
             if(contract){
               
-               contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"})
-               .then(results => {
-                    let votersAddress=[];
-                    results.forEach(event => {
-                        votersAddress.push(event.returnValues.voterAddress);    
-                    });
-                    setWhiteList(votersAddress);
-
-                    /*
-                    TODO erreur : in a list should have a unique "key" prop.
-                    let votersAddress = results.map((event,index) => {
-                        return {voterAddress: event.returnValues.voterAddress, key:index}
-                    });
-                    setWhiteList(votersAddress)
-                    */
-        
-                })
-               .catch(err => console.log(err));
+               const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
+               
+               let votersAddress = [];
+               voterRegisteredEvents.map((event)=>{
+                    votersAddress.push(event.returnValues.voterAddress);
+                   /* if(accounts[0]===event.returnValues.voterAddress){
+                        setIsWhiteListed(true);
+                    }*/
+                });
+               setWhiteList(votersAddress);
             }
         }
 
-        retrieveRegisteringVotersEvents();
-    }, [contract, accounts, whiteList])
+        /** 
+         * Listen the events  VoterRegistered. 
+         * if there is a new one => call retrieveRegisteringVotersPastEvents to retrieve all events
+         * */
+        async function retrieveRegisteringVotersEvent(){
+            if(contract){
+              contract.events.VoterRegistered({fromBlock:"earliest"})
+              .on('data', event => {
+                retrieveRegisteringVotersPastEvents();
+                })          
+              .on('changed', changed => console.log(changed))
+              .on('error', err => console.log(err))
+              .on('connected', str => console.log(str))
+            }
+        }
+
+        retrieveRegisteringVotersPastEvents();
+        retrieveRegisteringVotersEvent();
+    }, [contract, accounts])
 
     return (
         <>
-
-        {whiteList && Array.isArray(whiteList)?
-        (
-            <p>No events.....</p>
-        ) :  (  
             <div className="columns">
                 <div className="column is-one-quarter">
-                    
                 </div>
                 <div className="column is-half">
-                        <table className="table is-fullwidth">
+                {whiteList && Array.isArray(whiteList) && whiteList.length>0?
+        (
+                <table className="table is-fullwidth">
                     <thead>
                         <tr>
                             <th><abbr title="id">Id</abbr></th>
@@ -57,7 +68,7 @@ const WhiteListeList = () => {
                         {
                         whiteList.map((voter, index) => {
                             return(
-                            <tr>
+                            <tr key={index} className={accounts[0]=== voter ? "is-selected":""}>
                                 <td>{index}</td>
                                 <td>{voter}</td>
                             </tr>
@@ -65,14 +76,16 @@ const WhiteListeList = () => {
                         )}
                     </tbody>
                 </table>
+                  ) :   (  
+                    <p className="subtitle">No addresses have been whitelisted</p>
+                )   }
                 </div>
                 <div className="column is-one-quarter">
                 
                 </div>
             </div>
-        )   }
+      
         </>
     );
 };
-
 export default WhiteListeList;

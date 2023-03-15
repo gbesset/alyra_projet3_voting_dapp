@@ -28,14 +28,12 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                     })
                     setHasVoted(voter.hasVoted);
                 }
-                else{
-                    alert("You are not whitelisted")
-                }
+                
             }
         }
 
         getVoter();
-    },[]);
+    },[accounts]);
 
     function voterVote(proposalId){
         setVoter({
@@ -47,11 +45,11 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
     }
 
     function handleStatusChange(){
-        upgradeWorkflowStatus(WORKFLOW_STATUS.VotingSessionEnded);
+        if(isOwner)
+            upgradeWorkflowStatus(WORKFLOW_STATUS.VotingSessionEnded);
     }
 
     return (
-        <div className="debug">
             <>
                 <div className="is-flex is-flex-direction-row is-justify-content-space-between is-align-items-center">
                     <h1 className='title'>VotingSessionStarted</h1>
@@ -70,6 +68,9 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
 
                     </div>
                     <div className="column is-half  has-text-centered">
+                        {isVoter?
+                        (
+                            <>
                         <h3 className="subtitle">Proposals</h3> 
                         <button className="button" aria-haspopup="true" aria-controls="dropdown-menu" onClick={() =>setDisplayProposals(!displayProposals)}>
                             <span>Show proposals</span>
@@ -78,15 +79,16 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                             </span>
                         </button>
                         {displayProposals? <ProposalList /> : '' }
+                        </>
+                        ) : ( '' )}
                     </div>
                 </div>
 
                 
-                <VoteList />
+                {isVoter? <VoteList /> : '' }
                
             </>
-            
-            </div>
+
     );
 };
 
