@@ -8,10 +8,11 @@ export const VotingSessionEnded = ({upgradeWorkflowStatus}) => {
 
 
     async function handleStatusChange(){
-        if(contract){
-            await contract.methods.tallyVotes().send({from:accounts[0]})
+        if(contract && isOwner){
+            await contract.methods.tallyVotes().send({from:accounts[0]});
+            upgradeWorkflowStatus(WORKFLOW_STATUS.VotesTallied);
         }
-        upgradeWorkflowStatus(WORKFLOW_STATUS.VotesTallied);
+        
     }
 
     return (           
