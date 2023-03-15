@@ -5,17 +5,17 @@ import WhiteListeList from './WhiteListeList';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
 
 export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, accounts, artifact, isOwner} } = useEth();
-
-   
+    const { state: { accounts, isOwner, isVoter} } = useEth();
     
     function handleStatusChange(){
-        upgradeWorkflowStatus(WORKFLOW_STATUS.ProposalsRegistrationStarted);
+        if(isOwner)
+            upgradeWorkflowStatus(WORKFLOW_STATUS.ProposalsRegistrationStarted);
     }
 
+  
 
     return (
-        <div className="debug">
+        <div >
             {
             isOwner ? (
             <>
@@ -25,19 +25,24 @@ export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
                 </div>
 
                 <RegisterVoterForm />
-
-                <WhiteListeList/>
                
             </>
             ) : (
             <>
                 <h1 className='title'>Registering voters</h1>
-                <p>The Owner have to enter your public address in order to white list you. Please contact him</p>
-                <p>Your address is <strong>{accounts}</strong></p>
+                {!isVoter ?(<>
+                <p>The owner has to enter your public address in order to whitelist you. Please contact him.</p>
+                <p className="mt-4">Your address is <strong>{accounts[0]}</strong></p>
+                </>):(
+                    <p>Congratulations, you are whitelisted !</p>
+                )}
             </>
              )
              }
-                   </div>
+            <br/>
+            {isOwner || isVoter ? <WhiteListeList/> : '' }
+            
+        </div>
     );
 };
 

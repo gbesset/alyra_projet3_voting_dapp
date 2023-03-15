@@ -1,6 +1,15 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
+
+    const navigate = useNavigate();
+    
+    function routeChange(){ 
+      let path = '/protected/voter'; 
+      navigate(path);
+    }
+
     return (
         <>
             <section className="section">
@@ -33,7 +42,7 @@ export const Home = () => {
                     <li>Make some proposals and vote</li>
                 </ul>
             </div>
-            <button className="button is-primary mt-2">Go !</button>
+            <button className="button is-primary mt-2" onClick={routeChange}>Go !</button>
             </div>
         </section>
       </>

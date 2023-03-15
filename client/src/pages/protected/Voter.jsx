@@ -4,8 +4,10 @@ import { ProposalsRegistrationStarted } from '../../components/ProposalsRegistra
 import { RegisteringVoters } from '../../components/RegisteringVoters/index';
 import { WorkflowStatus } from '../../components/WorkflowStatus';
 import { useEth } from '../../contexts/EthContext';
-import { Account } from '../../components/Account/Account';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
+import { VotingSessionStarted } from '../../components/VotingSessionStarted';
+import { VotingSessionEnded } from '../../components/VotingSessionEnded';
+import { VotesTallied } from '../../components/VotesTallied';
 
 export const Voter = () => {
     const { state: { contract, accounts, artifact, isOwner, web3} } = useEth();
@@ -15,10 +17,8 @@ export const Voter = () => {
   
     
     const refreshStatus = async () => {
-        //alert('refresh status');
         const status = await contract.methods.workflowStatus().call({ from: accounts[0] });
         setWorkflowStatus(parseInt(status));
-        //props.onStatusChange(parseInt(status));
     }
 
     useEffect( () =>{    
@@ -35,7 +35,6 @@ export const Voter = () => {
 
 
     async function handleStatusChange(newStatus){
-alert("hello" + workflowStatus + "on demande "+newStatus)
 
         if(workflowStatus === WORKFLOW_STATUS.RegisteringVoters  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted){
             await contract.methods.startProposalsRegistering().send({from:accounts[0]})
@@ -46,12 +45,16 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus===WORKFLOW_STATUS.VotingSessionStarted){
+            await contract.methods.startVotingSession().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionStarted  && newStatus===WORKFLOW_STATUS.VotingSessionEnded){
+            await contract.methods.endVotingSession().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
+            //TODO tallyVote
+            await contract.methods.tallyVotes().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
         else{
@@ -66,15 +69,18 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
             <WorkflowStatus workflowStatus={workflowStatus} />
             {accounts ? (
                 <>
-                    <Account account={accounts}  isOwner={isOwner}/>
                     <br/>
-                    <p className="debug">Le status est {workflowStatus}</p>
-                    <br/>
-                    {workflowStatus==WORKFLOW_STATUS.RegisteringVoters ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
-                    <br/>
-                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationStarted ?<ProposalsRegistrationStarted upgradeWorkflowStatus={handleStatusChange}/>: '' }
-                    <br />
-                    {workflowStatus==WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded /> : '' }
+                    {workflowStatus===WORKFLOW_STATUS.RegisteringVoters ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
+                   
+                    {workflowStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted ?<ProposalsRegistrationStarted upgradeWorkflowStatus={handleStatusChange}/>: '' }
+                 
+                    {workflowStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
+                  
+                    {workflowStatus===WORKFLOW_STATUS.VotingSessionStarted ?<VotingSessionStarted upgradeWorkflowStatus={handleStatusChange}/> : '' }
+                    
+                    {workflowStatus===WORKFLOW_STATUS.VotingSessionEnded ?<VotingSessionEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
+                    
+                    {workflowStatus===WORKFLOW_STATUS.VotesTallied ?<VotesTallied upgradeWorkflowStatus={handleStatusChange}/> : '' }
                   </>
                 ) : (
                     <p>Need to connect with your wallet...</p>

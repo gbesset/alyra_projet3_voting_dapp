@@ -8,7 +8,7 @@ export const ProposalList = () => {
     const [proposalList, setProposalList] = useState([]);
 
     useEffect(() =>{
-        async function retrieveProposalRegisteredOldEvents(){
+        async function retrieveProposalRegisteredPastEvents(){
             if(contract){
                 //retrieve all past events
                 const proposalRegisteredEvents = await contract.getPastEvents("ProposalRegistered", {fromBlock:0, toBlock:"latest"});
@@ -28,49 +28,44 @@ export const ProposalList = () => {
                         }
                     )
                 }
-                /*eventProposalIdList.forEach(async id => {
-                    const proposal = await contract.methods.getOneProposal(id).call({from:accounts[0]});
-                    proposalListTmp.push(
-                        {
-                            id: id,
-                            description:proposal.desciption,
-                            voteCount: proposal.voteCount
-                        }
-                    )
-                });*/
-                    console.log(proposalListTmp)
+    
+                console.log(proposalListTmp)
                 setProposalList([...proposalListTmp]);
                 
             }
         }
 
-        retrieveProposalRegisteredOldEvents();
-    }, [contract, accounts])
-
-    useEffect(() =>{
         async function retrieveProposalRegisteredEvent(){
             if(contract){
               contract.events.ProposalRegistered({fromBlock:"earliest"})
-              .on('data', event => {alert("Vous avez ajouté la proposition : "+event.returnValues.proposalId);})          
+              .on('data', event => {
+                retrieveProposalRegisteredPastEvents();
+                })          
               .on('changed', changed => console.log(changed))
               .on('error', err => console.log(err))
               .on('connected', str => console.log(str))
             }
         }
 
+        retrieveProposalRegisteredPastEvents();
         retrieveProposalRegisteredEvent();
+    
+    }, [])
+
+    useEffect(() =>{
+       
     }, [])
 
     
 
     return (
             <>
-            {proposalList && Array.isArray(proposalList)?(
                 <div className="columns">
                     <div className="column is-one-quarter">
                         
                     </div>
                     <div className="column is-half">
+                    {proposalList && Array.isArray(proposalList) && proposalList.length>0?(
                             <table className="table is-fullwidth">
                         <thead>
                             <tr>
@@ -83,7 +78,7 @@ export const ProposalList = () => {
                             {
                                 proposalList.map((p, index) => {
                                     return(
-                                    <tr>
+                                    <tr key={index}>
                                         <td>{p.id}</td>
                                         <td>{p.description}</td>
                                         <td>{p.voteCount}</td>
@@ -92,16 +87,18 @@ export const ProposalList = () => {
                             )}
                         </tbody>
                     </table>
+                       ) :  (  
+                        <div>
+                            <p className="subtitle">There are no proposals at the moment</p>
+                        </div>
+                    )   }
+
                     </div>
                     <div className="column is-one-quarter">
                     
                     </div>
                 </div>
-            ) :  (  
-                <div>
-                    <p>No proposals.....</p>
-                </div>
-            )   }
+         
         </>
 
     );

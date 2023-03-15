@@ -15,6 +15,7 @@ function EthProvider({ children }) {
         const { abi } = artifact;
         let address, contract;
         let isOwner = false;
+        let isVoter = false;
         try {
           address = artifact.networks[networkID].address;
           contract = new web3.eth.Contract(abi, address);
@@ -22,12 +23,19 @@ function EthProvider({ children }) {
             const owner = await contract.methods.owner().call({ from: accounts[0] });
             accounts[0] === owner ? isOwner=true : isOwner=false;
           }
+          if(contract && accounts){
+              //Need to retrieve whitelist in events because getVoter is for OnlyVoter.
+              const VoterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
+              //find if address is Whitelisted
+              const whiteListVoterAddressEvent =  VoterRegisteredEvents.find((event)=>event.returnValues.voterAddress === accounts[0]);                   
+              whiteListVoterAddressEvent ? isVoter= true : isVoter=false;;
+          }
         } catch (err) {
           console.error(err);
         }
         dispatch({
           type: actions.init,
-          data: { artifact, web3, accounts, networkID, contract, isOwner }
+          data: { artifact, web3, accounts, networkID, contract, isOwner, isVoter }
         });
       }
     }, []);
