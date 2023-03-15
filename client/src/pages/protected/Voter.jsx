@@ -17,10 +17,8 @@ export const Voter = () => {
   
     
     const refreshStatus = async () => {
-        //alert('refresh status');
         const status = await contract.methods.workflowStatus().call({ from: accounts[0] });
         setWorkflowStatus(parseInt(status));
-        //props.onStatusChange(parseInt(status));
     }
 
     useEffect( () =>{    
@@ -73,15 +71,15 @@ export const Voter = () => {
                 <>
                     <br/>
                     {workflowStatus===WORKFLOW_STATUS.RegisteringVoters ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
-                    <br/>
+                   
                     {workflowStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted ?<ProposalsRegistrationStarted upgradeWorkflowStatus={handleStatusChange}/>: '' }
-                    <br />
+                 
                     {workflowStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded ?<ProposalsRegistrationEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
-                    <br />
+                  
                     {workflowStatus===WORKFLOW_STATUS.VotingSessionStarted ?<VotingSessionStarted upgradeWorkflowStatus={handleStatusChange}/> : '' }
-                    <br />
+                    
                     {workflowStatus===WORKFLOW_STATUS.VotingSessionEnded ?<VotingSessionEnded upgradeWorkflowStatus={handleStatusChange}/> : '' }
-                    <br />
+                    
                     {workflowStatus===WORKFLOW_STATUS.VotesTallied ?<VotesTallied upgradeWorkflowStatus={handleStatusChange}/> : '' }
                   </>
                 ) : (

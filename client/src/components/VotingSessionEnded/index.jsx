@@ -14,9 +14,7 @@ export const VotingSessionEnded = ({upgradeWorkflowStatus}) => {
         upgradeWorkflowStatus(WORKFLOW_STATUS.VotesTallied);
     }
 
-    return (
-        <div >
-           
+    return (           
             <>
             {isVoter ?(
                 <>
@@ -33,8 +31,7 @@ export const VotingSessionEnded = ({upgradeWorkflowStatus}) => {
 
             )}
             </>
-            
-            </div>
+
     );
 };
 
