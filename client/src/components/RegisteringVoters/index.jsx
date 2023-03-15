@@ -5,10 +5,11 @@ import WhiteListeList from './WhiteListeList';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
 
 export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, artifact, accounts, isOwner, isVoter} } = useEth();
+    const { state: { accounts, isOwner, isVoter} } = useEth();
     
     function handleStatusChange(){
-        upgradeWorkflowStatus(WORKFLOW_STATUS.ProposalsRegistrationStarted);
+        if(isOwner)
+            upgradeWorkflowStatus(WORKFLOW_STATUS.ProposalsRegistrationStarted);
     }
 
   
