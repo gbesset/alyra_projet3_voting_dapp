@@ -3,7 +3,7 @@ import { useEth } from '../../contexts/EthContext';
 
 export const RegisterVoterForm = () => {
     const [address, setAddress] = useState('');
-    const { state: {accounts, contract,  web3} } = useEth();
+    const { state: {accounts, contract,  web3, isOwner} } = useEth();
 
     const handleAddressChange = (e) =>{
         setAddress(e.target.value);
@@ -13,8 +13,9 @@ export const RegisterVoterForm = () => {
         if (!web3.utils.isAddress(address)) {
             alert("invalid address")
           }else{
-            if(contract){
+            if(contract && isOwner){
                 await contract.methods.addVoter(address).send({from:accounts[0]});
+                setAddress('')
             }
         }
     }

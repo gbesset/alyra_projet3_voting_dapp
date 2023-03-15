@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
-const WhiteListeList = () => {
-    const { state: {accounts, contract} } = useEth();
+ const WhiteListeList = () => {
+    const { state: {accounts, contract, isVoter} } = useEth();
 
-    const [isWhiteListed, setIsWhiteListed] = useState(false);
+    //const [isWhiteListed, setIsWhiteListed] = useState(false);
 
     const [whiteList, setWhiteList] = useState([]);
 
     useEffect(() =>{
+
+        /**
+         * retrieve all past VoterRegistered events
+         */
         async function retrieveRegisteringVotersPastEvents(){
             if(contract){
               
@@ -17,40 +21,38 @@ const WhiteListeList = () => {
                let votersAddress = [];
                voterRegisteredEvents.map((event)=>{
                     votersAddress.push(event.returnValues.voterAddress);
-                    if(accounts[0]===event.returnValues.voterAddress){
+                   /* if(accounts[0]===event.returnValues.voterAddress){
                         setIsWhiteListed(true);
-                    }
+                    }*/
                 });
                setWhiteList(votersAddress);
-
             }
         }
-       
-       /* async function retrieveRegisterintVotersEvents(){
-            if(contract){
-              
-                const voterRegisteredEvent = await contract.events.VoterRegistered({fromBlock:"earliest"})
-                .on('data', event =>{
-                    console.log(event.returnValues.VoterRegistered);
-                })
-                .on('changed', changed =>{
-                    console.log(changed)
-                })
 
+        /** 
+         * Listen the events  VoterRegistered. 
+         * if there is a new one => call retrieveRegisteringVotersPastEvents to retrieve all events
+         * */
+        async function retrieveRegisteringVotersEvent(){
+            if(contract){
+              contract.events.VoterRegistered({fromBlock:"earliest"})
+              .on('data', event => {
+                retrieveRegisteringVotersPastEvents();
+                })          
+              .on('changed', changed => console.log(changed))
+              .on('error', err => console.log(err))
+              .on('connected', str => console.log(str))
             }
-        }*/
+        }
 
         retrieveRegisteringVotersPastEvents();
-        //retrieveRegisterintVotersEvents();
-    }, [contract, accounts, whiteList])
+        retrieveRegisteringVotersEvent();
+    }, [contract, accounts])
 
     return (
         <>
-
-     
             <div className="columns">
                 <div className="column is-one-quarter">
-                    {Math.random()} 
                 </div>
                 <div className="column is-half">
                 {whiteList && Array.isArray(whiteList) && whiteList.length>0?
@@ -74,7 +76,7 @@ const WhiteListeList = () => {
                         )}
                     </tbody>
                 </table>
-                  ) :  (  
+                  ) :   (  
                     <p className="subtitle">No addresses have been whitelisted</p>
                 )   }
                 </div>
@@ -86,5 +88,4 @@ const WhiteListeList = () => {
         </>
     );
 };
-
 export default WhiteListeList;

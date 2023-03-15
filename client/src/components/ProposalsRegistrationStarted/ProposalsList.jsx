@@ -8,7 +8,7 @@ export const ProposalList = () => {
     const [proposalList, setProposalList] = useState([]);
 
     useEffect(() =>{
-        async function retrieveProposalRegisteredOldEvents(){
+        async function retrieveProposalRegisteredPastEvents(){
             if(contract){
                 //retrieve all past events
                 const proposalRegisteredEvents = await contract.getPastEvents("ProposalRegistered", {fromBlock:0, toBlock:"latest"});
@@ -39,7 +39,7 @@ export const ProposalList = () => {
             if(contract){
               contract.events.ProposalRegistered({fromBlock:"earliest"})
               .on('data', event => {
-                retrieveProposalRegisteredOldEvents();
+                retrieveProposalRegisteredPastEvents();
                 })          
               .on('changed', changed => console.log(changed))
               .on('error', err => console.log(err))
@@ -47,7 +47,7 @@ export const ProposalList = () => {
             }
         }
 
-        retrieveProposalRegisteredOldEvents();
+        retrieveProposalRegisteredPastEvents();
         retrieveProposalRegisteredEvent();
     
     }, [])

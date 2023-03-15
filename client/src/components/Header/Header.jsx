@@ -25,7 +25,6 @@ export const Header = () => {
                 <div className="navbar-start">
                     <Link to="/home" className="navbar-item">Home</Link>
                     <Link to="/protected/voter" className="navbar-item">Voter</Link>
-                    <Link to="/protected/admin" className="navbar-item">Admin</Link>
                 </div>
             </div>
 
