@@ -46,7 +46,6 @@ export const VoteList = () => {
 
     return (
         <>
-      {Math.random()}
             <div className="columns">
                 <div className="column is-one-quarter">
                     

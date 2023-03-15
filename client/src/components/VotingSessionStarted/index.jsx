@@ -45,11 +45,11 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
     }
 
     function handleStatusChange(){
-        upgradeWorkflowStatus(WORKFLOW_STATUS.VotingSessionEnded);
+        if(isOwner)
+            upgradeWorkflowStatus(WORKFLOW_STATUS.VotingSessionEnded);
     }
 
     return (
-        <div className="debug">
             <>
                 <div className="is-flex is-flex-direction-row is-justify-content-space-between is-align-items-center">
                     <h1 className='title'>VotingSessionStarted</h1>
@@ -88,8 +88,7 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                 {isVoter? <VoteList /> : '' }
                
             </>
-            
-            </div>
+
     );
 };
 
