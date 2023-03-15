@@ -4,7 +4,6 @@ import { ProposalsRegistrationStarted } from '../../components/ProposalsRegistra
 import { RegisteringVoters } from '../../components/RegisteringVoters/index';
 import { WorkflowStatus } from '../../components/WorkflowStatus';
 import { useEth } from '../../contexts/EthContext';
-import { Account } from '../../components/Account/Account';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
 import { VotingSessionStarted } from '../../components/VotingSessionStarted';
 import { VotingSessionEnded } from '../../components/VotingSessionEnded';
@@ -38,7 +37,6 @@ export const Voter = () => {
 
 
     async function handleStatusChange(newStatus){
-alert("hello" + workflowStatus + "on demande "+newStatus)
 
         if(workflowStatus === WORKFLOW_STATUS.RegisteringVoters  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted){
             await contract.methods.startProposalsRegistering().send({from:accounts[0]})
@@ -57,6 +55,7 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
+            //TODO tallyVote
             await contract.methods.tallyVotes().send({from:accounts[0]})
             setWorkflowStatus(newStatus);
         }
@@ -72,9 +71,6 @@ alert("hello" + workflowStatus + "on demande "+newStatus)
             <WorkflowStatus workflowStatus={workflowStatus} />
             {accounts ? (
                 <>
-                    <Account account={accounts}  isOwner={isOwner}/>
-                    <br/>
-                    <p className="debug">Le status est {workflowStatus}</p>
                     <br/>
                     {workflowStatus===WORKFLOW_STATUS.RegisteringVoters ? <RegisteringVoters upgradeWorkflowStatus={handleStatusChange}/>: ''}
                     <br/>

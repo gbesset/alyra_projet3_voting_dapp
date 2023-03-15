@@ -19,9 +19,9 @@ export const RegisterVoterForm = () => {
 
     return (
         <div className="field">
-            <label className="label">Address to whiteList</label>
-            <div className="columns">
-                <div className="column is-half">
+            <label className="subtitle ml-5">Address to whiteList</label>
+            <div className="columns is-centered">
+                <div className="column is-half has-text-centered ml-5">
                     <div className="control">
                         <input className="input is-success" value={address} onChange={handleAddressChange} type="text" placeholder="Address to whitelist" />
                     </div>

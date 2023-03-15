@@ -4,19 +4,24 @@ import { useEth } from '../../contexts/EthContext';
 const WhiteListeList = () => {
     const { state: {accounts, contract} } = useEth();
 
+    const [isWhiteListed, setIsWhiteListed] = useState(false);
+
     const [whiteList, setWhiteList] = useState([]);
 
     useEffect(() =>{
         async function retrieveRegisteringVotersEvents(){
             if(contract){
               
-               contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"})
-               .then(results => {
-                    let votersAddress=[];
-                    results.forEach(event => {
-                        votersAddress.push(event.returnValues.voterAddress);    
-                    });
-                    setWhiteList(votersAddress);
+               const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
+               
+               let votersAddress = [];
+               voterRegisteredEvents.map((event)=>{
+                    votersAddress.push(event.returnValues.voterAddress);
+                    if(accounts[0]===event.returnValues.voterAddress){
+                        setIsWhiteListed(true);
+                    }
+                });
+               setWhiteList(votersAddress);
 
                     /*
                     TODO erreur : in a list should have a unique "key" prop.
@@ -25,28 +30,25 @@ const WhiteListeList = () => {
                     });
                     setWhiteList(votersAddress)
                     */
-        
-                })
-               .catch(err => console.log(err));
+
             }
         }
-
+       
         retrieveRegisteringVotersEvents();
     }, [contract, accounts, whiteList])
 
     return (
         <>
 
-        {whiteList && Array.isArray(whiteList)?
-        (
-            <p>No events.....</p>
-        ) :  (  
+     
             <div className="columns">
                 <div className="column is-one-quarter">
                     
                 </div>
                 <div className="column is-half">
-                        <table className="table is-fullwidth">
+                {whiteList && Array.isArray(whiteList)?
+        (
+                <table className="table is-fullwidth">
                     <thead>
                         <tr>
                             <th><abbr title="id">Id</abbr></th>
@@ -57,7 +59,7 @@ const WhiteListeList = () => {
                         {
                         whiteList.map((voter, index) => {
                             return(
-                            <tr>
+                            <tr className={accounts[0]=== voter ? "is-selected":""}>
                                 <td>{index}</td>
                                 <td>{voter}</td>
                             </tr>
@@ -65,12 +67,15 @@ const WhiteListeList = () => {
                         )}
                     </tbody>
                 </table>
+                  ) :  (  
+                    <p className="subtitle">No addresses have been whitelisted</p>
+                )   }
                 </div>
                 <div className="column is-one-quarter">
                 
                 </div>
             </div>
-        )   }
+      
         </>
     );
 };

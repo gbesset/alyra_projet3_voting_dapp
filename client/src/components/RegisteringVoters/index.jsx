@@ -15,7 +15,7 @@ export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
 
 
     return (
-        <div className="debug">
+        <div >
             {
             isOwner ? (
             <>
@@ -25,19 +25,19 @@ export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
                 </div>
 
                 <RegisterVoterForm />
-
-                <WhiteListeList/>
                
             </>
             ) : (
             <>
                 <h1 className='title'>Registering voters</h1>
-                <p>The Owner have to enter your public address in order to white list you. Please contact him</p>
-                <p>Your address is <strong>{accounts}</strong></p>
+                <p>The owner has to enter your public address in order to whitelist you. Please contact him.</p>
+                <p className="mt-4">Your address is <strong>{accounts}</strong></p>
             </>
              )
              }
-                   </div>
+            <br/>
+            <WhiteListeList/>
+        </div>
     );
 };
 
