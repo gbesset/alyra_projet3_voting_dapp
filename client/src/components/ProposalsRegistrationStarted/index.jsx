@@ -5,7 +5,7 @@ import { ProposalList } from './ProposalsList.jsx';
 import { ProposalForm } from './proposalForm.jsx';
 
 export const ProposalsRegistrationStarted = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, accounts, artifact, isOwner} } = useEth();
+    const { state: { isOwner} } = useEth();
 
 
     function handleStatusChange(){
@@ -19,7 +19,7 @@ export const ProposalsRegistrationStarted = ({upgradeWorkflowStatus}) => {
                 { isOwner ? (<button className="button is-primary is-pulled-right" onClick={handleStatusChange}>Change state</button> ) : ''}
             </div>
             
-            <p>You can now add some proposals.....</p>
+            <p className="subtitle">You can now add some proposals !</p>
           
             <ProposalForm />
             <ProposalList/>
