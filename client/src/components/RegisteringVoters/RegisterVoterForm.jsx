@@ -13,7 +13,9 @@ export const RegisterVoterForm = () => {
         if (!web3.utils.isAddress(address)) {
             alert("invalid address")
           }else{
-            await contract.methods.addVoter(address).send({from:accounts[0]});
+            if(contract){
+                await contract.methods.addVoter(address).send({from:accounts[0]});
+            }
         }
     }
 

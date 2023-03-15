@@ -6,13 +6,10 @@ import {WORKFLOW_STATUS} from '../../utils/utils.js'
 
 export const RegisteringVoters = ({upgradeWorkflowStatus}) => {
     const { state: { contract, accounts, artifact, isOwner} } = useEth();
-
-   
     
     function handleStatusChange(){
         upgradeWorkflowStatus(WORKFLOW_STATUS.ProposalsRegistrationStarted);
     }
-
 
     return (
         <div >

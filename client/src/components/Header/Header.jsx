@@ -29,9 +29,9 @@ export const Header = () => {
                 </div>
             </div>
 
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
+            <div className="navbar-end">
+                <div className="navbar-item">
+                    <div className="buttons">
                         <Account accounts={accounts}  isOwner={isOwner}/>
                     </div>
                 </div>

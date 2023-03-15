@@ -9,7 +9,7 @@ const WhiteListeList = () => {
     const [whiteList, setWhiteList] = useState([]);
 
     useEffect(() =>{
-        async function retrieveRegisteringVotersEvents(){
+        async function retrieveRegisteringVotersPastEvents(){
             if(contract){
               
                const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
@@ -23,18 +23,25 @@ const WhiteListeList = () => {
                 });
                setWhiteList(votersAddress);
 
-                    /*
-                    TODO erreur : in a list should have a unique "key" prop.
-                    let votersAddress = results.map((event,index) => {
-                        return {voterAddress: event.returnValues.voterAddress, key:index}
-                    });
-                    setWhiteList(votersAddress)
-                    */
-
             }
         }
        
-        retrieveRegisteringVotersEvents();
+       /* async function retrieveRegisterintVotersEvents(){
+            if(contract){
+              
+                const voterRegisteredEvent = await contract.events.VoterRegistered({fromBlock:"earliest"})
+                .on('data', event =>{
+                    console.log(event.returnValues.VoterRegistered);
+                })
+                .on('changed', changed =>{
+                    console.log(changed)
+                })
+
+            }
+        }*/
+
+        retrieveRegisteringVotersPastEvents();
+        //retrieveRegisterintVotersEvents();
     }, [contract, accounts, whiteList])
 
     return (
@@ -43,10 +50,10 @@ const WhiteListeList = () => {
      
             <div className="columns">
                 <div className="column is-one-quarter">
-                    
+                    {Math.random()} 
                 </div>
                 <div className="column is-half">
-                {whiteList && Array.isArray(whiteList)?
+                {whiteList && Array.isArray(whiteList) && whiteList.length>0?
         (
                 <table className="table is-fullwidth">
                     <thead>
@@ -59,7 +66,7 @@ const WhiteListeList = () => {
                         {
                         whiteList.map((voter, index) => {
                             return(
-                            <tr className={accounts[0]=== voter ? "is-selected":""}>
+                            <tr key={index} className={accounts[0]=== voter ? "is-selected":""}>
                                 <td>{index}</td>
                                 <td>{voter}</td>
                             </tr>
