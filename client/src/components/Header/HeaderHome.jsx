@@ -1,10 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Account } from '../../components/Account/Account';
-import { useEth } from '../../contexts/EthContext';
 
-export const Header = () => {
-    const { state: { accounts, isOwner} } = useEth();
+export const HeaderHome = () => {
 
     return (
         <header>
@@ -25,18 +22,8 @@ export const Header = () => {
                 <div className="navbar-start">
                     <Link to="/home" className="navbar-item">Home</Link>
                     <Link to="/protected/voter" className="navbar-item">Voter</Link>
-                    <Link to="/protected/admin" className="navbar-item">Admin</Link>
                 </div>
             </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <Account accounts={accounts}  isOwner={isOwner}/>
-                    </div>
-                </div>
-            </div>
-
             
            
         </nav>
