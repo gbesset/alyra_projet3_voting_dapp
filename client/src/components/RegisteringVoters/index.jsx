@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useEth } from '../../contexts/EthContext';
 import { RegisterVoterForm } from './RegisterVoterForm';
 import WhiteListeList from './WhiteListeList';

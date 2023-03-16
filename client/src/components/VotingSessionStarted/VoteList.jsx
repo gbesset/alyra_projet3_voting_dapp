@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
-
+import { toastError} from '../../utils/utils.js'
 
 export const VoteList = () => {
     const { state: {accounts, contract, web3, txhash} } = useEth();
@@ -10,18 +10,23 @@ export const VoteList = () => {
     useEffect(() =>{
         async function retrieveVotedPastEvents(){
             if(contract){
-                const deployTx = await web3.eth.getTransaction(txhash)
-                const votedEvents = await contract.getPastEvents("Voted", {fromBlock:deployTx.blockNumber, toBlock:"latest"});
+                try{
+                    const deployTx = await web3.eth.getTransaction(txhash)
+                    const votedEvents = await contract.getPastEvents("Voted", {fromBlock:deployTx.blockNumber, toBlock:"latest"});
 
-                const votedListTmp=[];
-                votedEvents.map((event) => {
-                    votedListTmp.push({
-                        voter:event.returnValues.voter,
-                        proposalId:event.returnValues.proposalId
+                    const votedListTmp=[];
+                    votedEvents.map((event) => {
+                        votedListTmp.push({
+                            voter:event.returnValues.voter,
+                            proposalId:event.returnValues.proposalId
+                        })
+                    setVoteList(votedListTmp);
                     })
-                setVoteList(votedListTmp);
-                
-                })
+                }
+                catch(error){
+                    console.log(error)
+                    toastError("Problem to retrieve voted events")
+                }
               
             }
         }
@@ -32,8 +37,8 @@ export const VoteList = () => {
                 retrieveVotedPastEvents();
                 })          
               .on('changed', changed => console.log(changed))
-              .on('error', err => console.log(err))
-              .on('connected', str => console.log(str))
+              //.on('error', err => console.log(err))
+              //.on('connected', str => console.log(str))
             }
         }
 

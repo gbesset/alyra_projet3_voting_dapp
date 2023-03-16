@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
+import { toastError} from '../../utils/utils.js'
 
  const WhiteListeList = () => {
-    const { state: {accounts, contract, isVoter, txhash, web3} } = useEth();
+    const { state: {accounts, contract, txhash, web3} } = useEth();
     const [whiteList, setWhiteList] = useState([]);
 
     useEffect(() =>{
@@ -12,14 +13,20 @@ import { useEth } from '../../contexts/EthContext';
          */
         async function retrieveRegisteringVotersPastEvents(){
             if(contract){
-               const deployTx = await web3.eth.getTransaction(txhash)
-               const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:deployTx.blockNumber , toBlock:"latest"});
-               
-               let votersAddress = [];
-               voterRegisteredEvents.map((event)=>{
-                    votersAddress.push(event.returnValues.voterAddress);
-                });
-               setWhiteList(votersAddress);
+                try{
+                    const deployTx = await web3.eth.getTransaction(txhash)
+                    const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:deployTx.blockNumber , toBlock:"latest"});
+                    
+                    let votersAddress = [];
+                    voterRegisteredEvents.map((event)=>{
+                            votersAddress.push(event.returnValues.voterAddress);
+                        });
+                    setWhiteList(votersAddress);
+                }
+                catch(error){
+                    console.log(error)
+                    toastError("Problem to retrieve votersEvents")
+                }
             }
         }
 

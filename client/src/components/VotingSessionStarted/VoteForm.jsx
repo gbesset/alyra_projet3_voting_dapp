@@ -24,7 +24,7 @@ export const VoteForm = ({voterVote}) => {
             }
             catch(error){
                 console.log(error);
-                toastWarning("Invalid proposal id: '"+proposalId+"'")    
+                toastError("Invalid proposal id: '"+proposalId+"'")    
             }
         }else{
             toastWarning("Invalid proposal id: '"+proposalId+"'")

@@ -5,7 +5,7 @@ import { NotAuthorized } from '../NotAuthorized';
 import { VoteList } from '../VotingSessionStarted/VoteList';
 
 export const VotingSessionEnded = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, accounts, artifact, isOwner, isVoter} } = useEth();
+    const { state: { contract, isOwner, isVoter} } = useEth();
 
 
     async function handleStatusChange(){

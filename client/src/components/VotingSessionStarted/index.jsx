@@ -5,6 +5,7 @@ import { NotAuthorized } from '../NotAuthorized';
 import { ProposalList } from '../ProposalsRegistrationStarted/ProposalsList';
 import { VoteForm } from './VoteForm';
 import { VoteList } from './VoteList';
+import { toastError} from '../../utils/utils.js'
 
 export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
     const { state: { contract, accounts, isOwner, isVoter} } = useEth();
@@ -18,15 +19,20 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
 
             if(contract){       
                 if(isVoter){
-                    //retrieve voter info
-                    const voterInfo = await contract.methods.getVoter(accounts[0]).call({from: accounts[0]});
-            
-                    setVoter({
-                        isRegistered: voterInfo.isRegistered,
-                        hasVoted: voterInfo.hasVoted,
-                        votedProposalId:voterInfo.votedProposalId
-                    })
-                    console.log(isVoter + "  "+voter.isRegistered);
+                    try{
+                        //retrieve voter info
+                        const voterInfo = await contract.methods.getVoter(accounts[0]).call({from: accounts[0]});
+                
+                        setVoter({
+                            isRegistered: voterInfo.isRegistered,
+                            hasVoted: voterInfo.hasVoted,
+                            votedProposalId:voterInfo.votedProposalId
+                        })
+                    }
+                    catch(error){
+                        console.log(error)
+                        toastError("Problem to retrieve voter info")
+                    }
                 }
                 
             }

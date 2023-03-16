@@ -11,15 +11,21 @@ import { VotesTallied } from '../../components/VotesTallied';
 import { toastInfo, toastWarning, toastError} from '../../utils/utils.js'
 
 export const Voter = () => {
-    const { state: { contract, accounts, artifact, isOwner, web3} } = useEth();
+    const { state: { contract, accounts, artifact} } = useEth();
 
     const [workflowStatus, setWorkflowStatus] = useState(0);    //workflowStatus
    
   
     
     const refreshStatus = async () => {
-        const status = await contract.methods.workflowStatus().call({ from: accounts[0] });
-        setWorkflowStatus(parseInt(status));
+        try{
+            const status = await contract.methods.workflowStatus().call({ from: accounts[0] });
+            setWorkflowStatus(parseInt(status));
+        }
+        catch(error){
+            console.log(error)
+            toastError("Problem to retrieve workflow status")
+        }
     }
 
     useEffect( () =>{    

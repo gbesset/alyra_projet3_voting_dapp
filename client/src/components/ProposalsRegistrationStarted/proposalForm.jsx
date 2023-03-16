@@ -1,6 +1,6 @@
 import React, { useState }  from 'react';
 import { useEth } from '../../contexts/EthContext';
-import { toastInfo, toastWarning, toastError} from '../../utils/utils.js'
+import { toastInfo, toastWarning} from '../../utils/utils.js'
 
 export const ProposalForm = () => {
 
