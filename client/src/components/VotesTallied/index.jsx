@@ -1,31 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
-import {WORKFLOW_STATUS} from '../../utils/utils.js'
+import { toastError} from '../../utils/utils.js'
 
 export const VotesTallied = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, accounts, artifact, isOwner, isVoter} } = useEth();
+    const { state: { contract, accounts, isVoter} } = useEth();
 
     const [winingProposal, setWinningProposal] = useState('');
     const [winingProposalDescription, setWinningProposalDescription] = useState('');
 
-    function handleStatusChange(){
-        upgradeWorkflowStatus(WORKFLOW_STATUS.VotingSessionEnded);
-    }
     useEffect(() =>{
         async function retrieveWinningProposalID(){
             if(contract){
             
-                const wining = await contract.methods.winningProposalID().call({from: accounts[0]});
-                setWinningProposal(wining);
+                try{
+                    const wining = await contract.methods.winningProposalID().call({from: accounts[0]});
+                    setWinningProposal(wining);
 
-                if(isVoter){
-                    const proposal = await contract.methods.getOneProposal(wining).call({from: accounts[0]});
-                    setWinningProposalDescription(
-                        {
-                            description:proposal.description,
-                            voteCount: proposal.voteCount
-                        }
-                    );
+                    if(isVoter){
+                        const proposal = await contract.methods.getOneProposal(wining).call({from: accounts[0]});
+                        setWinningProposalDescription(
+                            {
+                                description:proposal.description,
+                                voteCount: proposal.voteCount
+                            }
+                        );
+                    }
+                }
+                catch(error){
+                    console.log(error)
+                    toastError("Problem to retrieve winningProposalId")
                 }
             }
         }
@@ -39,7 +42,7 @@ export const VotesTallied = ({upgradeWorkflowStatus}) => {
                     <h1 className='title'>VotesTallied</h1>
                 </div>
 
-                <p className="subtitle">The wining proposal is #{winingProposal} ! {isVoter ?<span>with : <b>{winingProposalDescription.description}</b> ({winingProposalDescription.voteCount} votes)</span>:''}
+                <p className="subtitle mt-5">The wining proposal is #{winingProposal} ! {isVoter ?<span>with : <b>{winingProposalDescription.description}</b> ({winingProposalDescription.voteCount} votes)</span>:''}
                 </p>
           
                 </div>

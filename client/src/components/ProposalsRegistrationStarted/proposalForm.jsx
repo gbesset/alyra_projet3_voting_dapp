@@ -1,5 +1,6 @@
 import React, { useState }  from 'react';
 import { useEth } from '../../contexts/EthContext';
+import { toastInfo, toastWarning} from '../../utils/utils.js'
 
 export const ProposalForm = () => {
 
@@ -13,9 +14,10 @@ export const ProposalForm = () => {
     const handleAdd = async() =>{
         if(proposal && proposal.length>0){
             await contract.methods.addProposal(proposal).send({from:accounts[0]});
+            toastInfo("Your proposal '"+ proposal + "' has been added")
             setProposal('');
         }else{
-              alert("invalid proposal")
+            toastWarning("invalid proposal")
             }
         }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
 import { useEth } from '../../contexts/EthContext';
 import { ProposalList } from '../ProposalsRegistrationStarted/ProposalsList.jsx';
+import { NotAuthorized } from '../NotAuthorized/index.jsx';
 
 
 export const ProposalsRegistrationEnded = ({upgradeWorkflowStatus}) => {
@@ -19,13 +20,14 @@ export const ProposalsRegistrationEnded = ({upgradeWorkflowStatus}) => {
                 { isOwner ? (<button className="button is-primary is-pulled-right" onClick={handleStatusChange}>Change state</button> ) : ''}
             </div>
 
-            <p className="subtitle ml-5">The voting session will starting soon.....</p>
-
             {isVoter?(<>
-            <p className="has-text-centered pb-5">Here are the proposals, choose one for the vote</p>
+            <p className="subtitle mt-5 ml-5">The voting session will starting soon.....</p>
+            <p className="has-text-centered mb-5">Here are the proposals, choose one for the vote</p>
             <ProposalList />
             </>) : (
-                    <p>You are not whitelisted and can't access to that data.</p>
+                <div className="pt-5">
+                    <NotAuthorized />
+                </div>
             )}
         </>
     );

@@ -8,17 +8,24 @@ import {WORKFLOW_STATUS} from '../../utils/utils.js'
 import { VotingSessionStarted } from '../../components/VotingSessionStarted';
 import { VotingSessionEnded } from '../../components/VotingSessionEnded';
 import { VotesTallied } from '../../components/VotesTallied';
+import { toastInfo, toastWarning, toastError} from '../../utils/utils.js'
 
 export const Voter = () => {
-    const { state: { contract, accounts, artifact, isOwner, web3} } = useEth();
+    const { state: { contract, accounts, artifact} } = useEth();
 
     const [workflowStatus, setWorkflowStatus] = useState(0);    //workflowStatus
    
   
     
     const refreshStatus = async () => {
-        const status = await contract.methods.workflowStatus().call({ from: accounts[0] });
-        setWorkflowStatus(parseInt(status));
+        try{
+            const status = await contract.methods.workflowStatus().call({ from: accounts[0] });
+            setWorkflowStatus(parseInt(status));
+        }
+        catch(error){
+            console.log(error)
+            toastError("Problem to retrieve workflow status")
+        }
     }
 
     useEffect( () =>{    
@@ -35,30 +42,37 @@ export const Voter = () => {
 
 
     async function handleStatusChange(newStatus){
-
-        if(workflowStatus === WORKFLOW_STATUS.RegisteringVoters  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted){
-            await contract.methods.startProposalsRegistering().send({from:accounts[0]})
-            setWorkflowStatus(newStatus);
+        try{
+            if(workflowStatus === WORKFLOW_STATUS.RegisteringVoters  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationStarted){
+                await contract.methods.startProposalsRegistering().send({from:accounts[0]})
+                setWorkflowStatus(newStatus);
+            }
+            else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationStarted  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded){
+                await contract.methods.endProposalsRegistering().send({from:accounts[0]})
+                setWorkflowStatus(newStatus);
+            }
+            else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus===WORKFLOW_STATUS.VotingSessionStarted){
+                await contract.methods.startVotingSession().send({from:accounts[0]})
+                setWorkflowStatus(newStatus);
+            }
+            else if(workflowStatus === WORKFLOW_STATUS.VotingSessionStarted  && newStatus===WORKFLOW_STATUS.VotingSessionEnded){
+                await contract.methods.endVotingSession().send({from:accounts[0]})
+                setWorkflowStatus(newStatus);
+            }
+            else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
+            
+                await contract.methods.tallyVotes().call({from:accounts[0]});
+                await contract.methods.tallyVotes().send({from:accounts[0]})
+                setWorkflowStatus(newStatus);
+                toastInfo('Votes couted ! here are the results.....')
+            }
+            else{
+                toastWarning('Impossible to change status...')
+            }
         }
-        else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationStarted  && newStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded){
-            await contract.methods.endProposalsRegistering().send({from:accounts[0]})
-            setWorkflowStatus(newStatus);
-        }
-        else if(workflowStatus === WORKFLOW_STATUS.ProposalsRegistrationEnded  && newStatus===WORKFLOW_STATUS.VotingSessionStarted){
-            await contract.methods.startVotingSession().send({from:accounts[0]})
-            setWorkflowStatus(newStatus);
-        }
-        else if(workflowStatus === WORKFLOW_STATUS.VotingSessionStarted  && newStatus===WORKFLOW_STATUS.VotingSessionEnded){
-            await contract.methods.endVotingSession().send({from:accounts[0]})
-            setWorkflowStatus(newStatus);
-        }
-        else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
-            //TODO tallyVote
-            await contract.methods.tallyVotes().send({from:accounts[0]})
-            setWorkflowStatus(newStatus);
-        }
-        else{
-            alert('Impossible de changer de status...')
+        catch(error){
+            console.log(error);
+            toastError('Error during workflow status update')
         }
         
     }

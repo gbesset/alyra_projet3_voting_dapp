@@ -5,7 +5,7 @@ export const Footer = () => {
         <footer className="footer">
         <div className="content has-text-centered">
           <p>
-            <strong>2023</strong>
+            Promo <strong>Satoshi Kingz 2023</strong>
           </p>
         </div>
       </footer>

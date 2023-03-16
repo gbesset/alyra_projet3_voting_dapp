@@ -44,7 +44,7 @@ export const WorkflowStatus = ({workflowStatus}) => {
                 <p className="is-size-6">You can vote</p>
             </div>
             </li>
-            <li className={`steps-segment ${workflowStatus==WORKFLOW_STATUS.VotingSessionEnded ? ('is-active'):('')}`}>
+            <li className={`steps-segment ${workflowStatus===WORKFLOW_STATUS.VotingSessionEnded ? ('is-active'):('')}`}>
             <span className="steps-marker">
                 <span className="icon">
                     <i className="fa fa-user"></i>

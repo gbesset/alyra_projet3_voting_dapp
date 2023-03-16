@@ -17,7 +17,7 @@ export const Account = ({accounts, isOwner}) => {
     
     return (
         <div>
-            {isOwner==true?(
+            {isOwner===true?(
                 <>
                 <span className="icon is-large"><i className="fa fa-user"></i></span>
                  <a className="button is-primary">

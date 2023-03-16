@@ -9,7 +9,8 @@ const initialState = {
   networkID: null,
   contract: null,
   isOwner: null,
-  isVoter:null
+  isVoter:null,
+  txhash:null
 };
 
 const reducer = (state, action) => {
