@@ -15,12 +15,16 @@ export const RegisterVoterForm = () => {
             toastWarning("Invalid address: '" + address+"'");
           }else{
             if(contract && isOwner){
-                // TODO faire le call avant send pour verifier OK
-                //const tx = await contract.methods.addVoter(address).call({from:accounts[0]});
-     
-                await contract.methods.addVoter(address).send({from:accounts[0]});
-                toastInfo("address '"+address+ "' white listed")
-                setAddress('')
+                try{
+                    //check if addProposal would work
+                    await contract.methods.addVoter(address).call({ from: accounts[0] });
+                    await contract.methods.addVoter(address).send({from:accounts[0]});
+                    toastInfo("address '"+address+ "' white listed")
+                    setAddress('')
+                }catch(error){
+                    console.log(error)
+                    toastError("address '"+address+ "' already white listed")
+                }
             }
         }
     }

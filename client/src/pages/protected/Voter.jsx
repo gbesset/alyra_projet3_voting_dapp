@@ -8,6 +8,7 @@ import {WORKFLOW_STATUS} from '../../utils/utils.js'
 import { VotingSessionStarted } from '../../components/VotingSessionStarted';
 import { VotingSessionEnded } from '../../components/VotingSessionEnded';
 import { VotesTallied } from '../../components/VotesTallied';
+import { toastInfo, toastWarning, toastError} from '../../utils/utils.js'
 
 export const Voter = () => {
     const { state: { contract, accounts, artifact, isOwner, web3} } = useEth();
@@ -53,9 +54,16 @@ export const Voter = () => {
             setWorkflowStatus(newStatus);
         }
         else if(workflowStatus === WORKFLOW_STATUS.VotingSessionEnded  && newStatus===WORKFLOW_STATUS.VotesTallied){
-            //TODO tallyVote
-            await contract.methods.tallyVotes().send({from:accounts[0]})
-            setWorkflowStatus(newStatus);
+            try{
+                await contract.methods.tallyVotes().call({from:accounts[0]});
+                await contract.methods.tallyVotes().send({from:accounts[0]})
+                setWorkflowStatus(newStatus);
+                toastInfo('Votes couted ! here are the results.....')
+            }
+            catch(error){
+                console.log(error);
+                toastError('Error in tallyVote')
+            }
         }
         else{
             alert('Impossible de changer de status...')
