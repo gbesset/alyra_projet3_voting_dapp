@@ -6,27 +6,26 @@ import { VoteForm } from './VoteForm';
 import { VoteList } from './VoteList';
 
 export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, accounts, artifact, isOwner, isVoter} } = useEth();
+    const { state: { contract, accounts, isOwner, isVoter} } = useEth();
 
     const [displayProposals, setDisplayProposals] = useState(false);
     const [voter, setVoter] = useState('');
-    const [hasVoted, setHasVoted] = useState(false);
 
 
     useEffect(()=>{
         async function getVoter(){
-            if(contract){
 
+            if(contract){       
                 if(isVoter){
                     //retrieve voter info
-                    const voter = await contract.methods.getVoter(accounts[0]).call({from: accounts[0]});
+                    const voterInfo = await contract.methods.getVoter(accounts[0]).call({from: accounts[0]});
             
                     setVoter({
-                        isRegistered: voter.isRegistered,
-                        hasVoted: voter.hasVoted,
-                        votedProposalId:voter.votedProposalId
+                        isRegistered: voterInfo.isRegistered,
+                        hasVoted: voterInfo.hasVoted,
+                        votedProposalId:voterInfo.votedProposalId
                     })
-                    setHasVoted(voter.hasVoted);
+                    console.log(isVoter + "  "+voter.isRegistered);
                 }
                 
             }
@@ -41,7 +40,6 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
             hasVoted: true,
             votedProposalId:proposalId
         })
-        setHasVoted(true);
     }
 
     function handleStatusChange(){
@@ -58,7 +56,7 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                 <div className="columns mt-5 is-centered">
                     <div className="column is-half has-text-centered">
                         { 
-                        hasVoted ? (
+                        isVoter && voter.hasVoted ? (
                             <p>You voted for {voter.votedProposalId}</p>    
                         )
                         :(
