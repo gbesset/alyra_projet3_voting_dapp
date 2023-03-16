@@ -13,12 +13,19 @@ export const VoteForm = ({voterVote}) => {
     }
 
     const handleVote = async() =>{
-        if (proposalId && /^\d+$|^$/.test(proposalId)) {
-            await contract.methods.setVote(proposalId).send({from:accounts[0]});
-            toastInfo("You voted for proposal id: '"+proposalId+"'")
-            voterVote(proposalId)
-            setHasVoted(true);
-            setProposalId('');
+        if (proposalId && /^\d+$|^$/.test(proposalId) && proposalId!=0) {
+            try{
+                await contract.methods.setVote(proposalId).call({from:accounts[0]});
+                await contract.methods.setVote(proposalId).send({from:accounts[0]});
+                toastInfo("You voted for proposal id: '"+proposalId+"'")
+                voterVote(proposalId)
+                setHasVoted(true);
+                setProposalId('');
+            }
+            catch(error){
+                console.log(error);
+                toastWarning("Invalid proposal id: '"+proposalId+"'")    
+            }
         }else{
             toastWarning("Invalid proposal id: '"+proposalId+"'")
             }

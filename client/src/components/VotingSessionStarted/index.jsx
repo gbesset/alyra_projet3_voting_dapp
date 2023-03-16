@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
+import { NotAuthorized } from '../NotAuthorized';
 import { ProposalList } from '../ProposalsRegistrationStarted/ProposalsList';
 import { VoteForm } from './VoteForm';
 import { VoteList } from './VoteList';
@@ -61,7 +62,7 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                         )
                         :(
                             isVoter? <VoteForm voterVote={voterVote}/> : (
-                            <p>You are not whitelisted and can't vote...</p>    
+                            <NotAuthorized /> 
                         ))}
 
                     </div>

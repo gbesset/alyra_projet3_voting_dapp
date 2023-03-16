@@ -39,7 +39,7 @@ export const VotesTallied = ({upgradeWorkflowStatus}) => {
                     <h1 className='title'>VotesTallied</h1>
                 </div>
 
-                <p className="subtitle">The wining proposal is #{winingProposal} ! {isVoter ?<span>with : <b>{winingProposalDescription.description}</b> ({winingProposalDescription.voteCount} votes)</span>:''}
+                <p className="subtitle mt-5">The wining proposal is #{winingProposal} ! {isVoter ?<span>with : <b>{winingProposalDescription.description}</b> ({winingProposalDescription.voteCount} votes)</span>:''}
                 </p>
           
                 </div>

@@ -3,6 +3,7 @@ import {WORKFLOW_STATUS} from '../../utils/utils.js'
 import { useEth } from '../../contexts/EthContext';
 import { ProposalList } from './ProposalsList.jsx';
 import { ProposalForm } from './proposalForm.jsx';
+import { NotAuthorized } from '../NotAuthorized/index.jsx';
 
 export const ProposalsRegistrationStarted = ({upgradeWorkflowStatus}) => {
     const { state: { isOwner, isVoter} } = useEth();
@@ -26,7 +27,7 @@ export const ProposalsRegistrationStarted = ({upgradeWorkflowStatus}) => {
                <ProposalForm />
                <ProposalList/>
           </>):(
-              <p>You are not whitelisted and can't access to that data.</p>
+              <NotAuthorized />
           )}
         </div>
     );

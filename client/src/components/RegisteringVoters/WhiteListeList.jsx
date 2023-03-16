@@ -3,9 +3,6 @@ import { useEth } from '../../contexts/EthContext';
 
  const WhiteListeList = () => {
     const { state: {accounts, contract, isVoter, txhash, web3} } = useEth();
-
-    //const [isWhiteListed, setIsWhiteListed] = useState(false);
-
     const [whiteList, setWhiteList] = useState([]);
 
     useEffect(() =>{
@@ -21,9 +18,6 @@ import { useEth } from '../../contexts/EthContext';
                let votersAddress = [];
                voterRegisteredEvents.map((event)=>{
                     votersAddress.push(event.returnValues.voterAddress);
-                   /* if(accounts[0]===event.returnValues.voterAddress){
-                        setIsWhiteListed(true);
-                    }*/
                 });
                setWhiteList(votersAddress);
             }
@@ -39,9 +33,6 @@ import { useEth } from '../../contexts/EthContext';
               .on('data', event => {
                 retrieveRegisteringVotersPastEvents();
                 })          
-              .on('changed', changed => console.log(changed))
-              .on('error', err => console.log(err))
-              .on('connected', str => console.log(str))
             }
         }
 

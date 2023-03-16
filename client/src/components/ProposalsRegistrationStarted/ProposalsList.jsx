@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
 export const ProposalList = ({hideVoteCount=false}) => {
+    
     const { state: {accounts, contract, txhash, web3} } = useEth();
-
-
     const [proposalList, setProposalList] = useState([]);
 
     useEffect(() =>{
@@ -29,10 +28,7 @@ export const ProposalList = ({hideVoteCount=false}) => {
                         }
                     )
                 }
-    
-                console.log(proposalListTmp)
-                setProposalList([...proposalListTmp]);
-                
+                setProposalList([...proposalListTmp]);            
             }
         }
 
@@ -42,9 +38,6 @@ export const ProposalList = ({hideVoteCount=false}) => {
               .on('data', event => {
                 retrieveProposalRegisteredPastEvents();
                 })          
-              .on('changed', changed => console.log(changed))
-              .on('error', err => console.log(err))
-              .on('connected', str => console.log(str))
             }
         }
 
@@ -52,12 +45,6 @@ export const ProposalList = ({hideVoteCount=false}) => {
         retrieveProposalRegisteredEvent();
     
     }, [])
-
-    useEffect(() =>{
-       
-    }, [])
-
-    
 
     return (
             <>
