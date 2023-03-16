@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
  const WhiteListeList = () => {
-    const { state: {accounts, contract, isVoter} } = useEth();
+    const { state: {accounts, contract, isVoter, txhash, web3} } = useEth();
 
     //const [isWhiteListed, setIsWhiteListed] = useState(false);
 
@@ -15,8 +15,8 @@ import { useEth } from '../../contexts/EthContext';
          */
         async function retrieveRegisteringVotersPastEvents(){
             if(contract){
-              
-               const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
+               const deployTx = await web3.eth.getTransaction(txhash)
+               const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:deployTx.blockNumber , toBlock:"latest"});
                
                let votersAddress = [];
                voterRegisteredEvents.map((event)=>{

@@ -3,15 +3,15 @@ import { useEth } from '../../contexts/EthContext';
 
 
 export const VoteList = () => {
-    const { state: {accounts, contract} } = useEth();
+    const { state: {accounts, contract, web3, txhash} } = useEth();
 
     const [voteList, setVoteList] = useState([]);
 
     useEffect(() =>{
         async function retrieveVotedPastEvents(){
             if(contract){
-            
-                const votedEvents = await contract.getPastEvents("Voted", {fromBlock:0, toBlock:"latest"});
+                const deployTx = await web3.eth.getTransaction(txhash)
+                const votedEvents = await contract.getPastEvents("Voted", {fromBlock:deployTx.blockNumber, toBlock:"latest"});
 
                 const votedListTmp=[];
                 votedEvents.map((event) => {

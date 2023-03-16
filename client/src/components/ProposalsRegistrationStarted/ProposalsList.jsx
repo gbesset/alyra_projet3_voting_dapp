@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
 export const ProposalList = () => {
-    const { state: {accounts, contract} } = useEth();
+    const { state: {accounts, contract, txhash, web3} } = useEth();
 
 
     const [proposalList, setProposalList] = useState([]);
@@ -10,8 +10,9 @@ export const ProposalList = () => {
     useEffect(() =>{
         async function retrieveProposalRegisteredPastEvents(){
             if(contract){
+                const deployTx = await web3.eth.getTransaction(txhash)
                 //retrieve all past events
-                const proposalRegisteredEvents = await contract.getPastEvents("ProposalRegistered", {fromBlock:0, toBlock:"latest"});
+                const proposalRegisteredEvents = await contract.getPastEvents("ProposalRegistered", {fromBlock:deployTx.blockNumber , toBlock:"latest"});
               
                 //retrieve all past events IDs
                 const eventProposalIdList = proposalRegisteredEvents.map((event)=>event.returnValues.proposalId)
