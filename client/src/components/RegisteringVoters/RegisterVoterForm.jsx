@@ -1,5 +1,6 @@
 import React, { useState }  from 'react';
 import { useEth } from '../../contexts/EthContext';
+import { toastInfo, toastWarning, toastError} from '../../utils/utils.js'
 
 export const RegisterVoterForm = () => {
     const [address, setAddress] = useState('');
@@ -11,10 +12,11 @@ export const RegisterVoterForm = () => {
 
     const handleAdd = async() =>{
         if (!web3.utils.isAddress(address)) {
-            alert("invalid address")
+            toastWarning("Invalid address: '" + address+"'");
           }else{
             if(contract && isOwner){
                 await contract.methods.addVoter(address).send({from:accounts[0]});
+                toastInfo("address '"+address+ "' white listed")
                 setAddress('')
             }
         }
