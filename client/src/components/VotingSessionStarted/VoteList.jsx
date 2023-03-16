@@ -64,7 +64,7 @@ export const VoteList = () => {
                         {
                             voteList.map((v, index) => {
                                 return(
-                                <tr key={index}>
+                                <tr key={index} className={accounts[0]=== v.voter ? "is-selected":""}>
                                     <td>{index}</td>
                                     <td>{v.voter}</td>
                                     <td>{v.proposalId}</td>

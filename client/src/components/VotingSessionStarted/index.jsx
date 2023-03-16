@@ -62,7 +62,7 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                             <p>You voted for {voter.votedProposalId}</p>    
                         )
                         :(
-                            isVoter? <VoteForm /> : (
+                            isVoter? <VoteForm voterVote={voterVote}/> : (
                             <p>You are not whitelisted and can't vote...</p>    
                         ))}
 
@@ -78,7 +78,7 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                                 <i className="fa fa-angle-down" aria-hidden="true"></i>
                             </span>
                         </button>
-                        {displayProposals? <ProposalList /> : '' }
+                        {displayProposals? <ProposalList  hideVoteCount="true"/> : '' }
                         </>
                         ) : ( '' )}
                     </div>

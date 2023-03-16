@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
-export const ProposalList = () => {
+export const ProposalList = ({hideVoteCount=false}) => {
     const { state: {accounts, contract, txhash, web3} } = useEth();
 
 
@@ -72,7 +72,7 @@ export const ProposalList = () => {
                             <tr>
                                 <th><abbr title="address">Proposal id</abbr></th>
                                 <th><abbr title="address">Proposal</abbr></th>
-                                <th><abbr title="address">voteCount</abbr></th>
+                                {hideVoteCount?'':<th><abbr title="address">voteCount</abbr></th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -82,7 +82,7 @@ export const ProposalList = () => {
                                     <tr key={index}>
                                         <td>{p.id}</td>
                                         <td>{p.description}</td>
-                                        <td>{p.voteCount}</td>
+                                        {hideVoteCount?'':   <td>{p.voteCount}</td>}
                                     </tr>
                                 )}
                             )}
