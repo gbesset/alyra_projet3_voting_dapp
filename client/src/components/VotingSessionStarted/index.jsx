@@ -1,32 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 import {WORKFLOW_STATUS} from '../../utils/utils.js'
+import { NotAuthorized } from '../NotAuthorized';
 import { ProposalList } from '../ProposalsRegistrationStarted/ProposalsList';
 import { VoteForm } from './VoteForm';
 import { VoteList } from './VoteList';
+import { toastError} from '../../utils/utils.js'
 
 export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
-    const { state: { contract, accounts, artifact, isOwner, isVoter} } = useEth();
+    const { state: { contract, accounts, isOwner, isVoter} } = useEth();
 
     const [displayProposals, setDisplayProposals] = useState(false);
     const [voter, setVoter] = useState('');
-    const [hasVoted, setHasVoted] = useState(false);
 
 
     useEffect(()=>{
         async function getVoter(){
-            if(contract){
 
+            if(contract){       
                 if(isVoter){
-                    //retrieve voter info
-                    const voter = await contract.methods.getVoter(accounts[0]).call({from: accounts[0]});
-            
-                    setVoter({
-                        isRegistered: voter.isRegistered,
-                        hasVoted: voter.hasVoted,
-                        votedProposalId:voter.votedProposalId
-                    })
-                    setHasVoted(voter.hasVoted);
+                    try{
+                        //retrieve voter info
+                        const voterInfo = await contract.methods.getVoter(accounts[0]).call({from: accounts[0]});
+                
+                        setVoter({
+                            isRegistered: voterInfo.isRegistered,
+                            hasVoted: voterInfo.hasVoted,
+                            votedProposalId:voterInfo.votedProposalId
+                        })
+                    }
+                    catch(error){
+                        console.log(error)
+                        toastError("Problem to retrieve voter info")
+                    }
                 }
                 
             }
@@ -41,7 +47,6 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
             hasVoted: true,
             votedProposalId:proposalId
         })
-        setHasVoted(true);
     }
 
     function handleStatusChange(){
@@ -58,12 +63,12 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                 <div className="columns mt-5 is-centered">
                     <div className="column is-half has-text-centered">
                         { 
-                        hasVoted ? (
+                        isVoter && voter.hasVoted ? (
                             <p>You voted for {voter.votedProposalId}</p>    
                         )
                         :(
-                            isVoter? <VoteForm /> : (
-                            <p>You are not whitelisted and can't vote...</p>    
+                            isVoter? <VoteForm voterVote={voterVote}/> : (
+                            <NotAuthorized /> 
                         ))}
 
                     </div>
@@ -78,7 +83,7 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                                 <i className="fa fa-angle-down" aria-hidden="true"></i>
                             </span>
                         </button>
-                        {displayProposals? <ProposalList /> : '' }
+                        {displayProposals? <ProposalList  hideVoteCount="true"/> : '' }
                         </>
                         ) : ( '' )}
                     </div>

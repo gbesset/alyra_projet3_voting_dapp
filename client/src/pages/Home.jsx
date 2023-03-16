@@ -24,7 +24,6 @@ export const Home = () => {
                 <div className="subtitle pt-2">Developed by:
                     <ul className="pl-2">
                         <li className="pt-2">Guillaume Besset</li>
-                        <li className="pt-2">Eli Gonzalez Zarate</li>
                     </ul> 
                 </div>
                 </div>

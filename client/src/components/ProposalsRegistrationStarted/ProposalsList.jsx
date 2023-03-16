@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 
-export const ProposalList = () => {
-    const { state: {accounts, contract} } = useEth();
-
-
+export const ProposalList = ({hideVoteCount=false}) => {
+    
+    const { state: {accounts, contract, txhash, web3} } = useEth();
     const [proposalList, setProposalList] = useState([]);
 
     useEffect(() =>{
         async function retrieveProposalRegisteredPastEvents(){
             if(contract){
+                const deployTx = await web3.eth.getTransaction(txhash)
                 //retrieve all past events
-                const proposalRegisteredEvents = await contract.getPastEvents("ProposalRegistered", {fromBlock:0, toBlock:"latest"});
+                const proposalRegisteredEvents = await contract.getPastEvents("ProposalRegistered", {fromBlock:deployTx.blockNumber , toBlock:"latest"});
               
                 //retrieve all past events IDs
                 const eventProposalIdList = proposalRegisteredEvents.map((event)=>event.returnValues.proposalId)
@@ -28,10 +28,7 @@ export const ProposalList = () => {
                         }
                     )
                 }
-    
-                console.log(proposalListTmp)
-                setProposalList([...proposalListTmp]);
-                
+                setProposalList([...proposalListTmp]);            
             }
         }
 
@@ -41,9 +38,6 @@ export const ProposalList = () => {
               .on('data', event => {
                 retrieveProposalRegisteredPastEvents();
                 })          
-              .on('changed', changed => console.log(changed))
-              .on('error', err => console.log(err))
-              .on('connected', str => console.log(str))
             }
         }
 
@@ -51,12 +45,6 @@ export const ProposalList = () => {
         retrieveProposalRegisteredEvent();
     
     }, [])
-
-    useEffect(() =>{
-       
-    }, [])
-
-    
 
     return (
             <>
@@ -71,7 +59,7 @@ export const ProposalList = () => {
                             <tr>
                                 <th><abbr title="address">Proposal id</abbr></th>
                                 <th><abbr title="address">Proposal</abbr></th>
-                                <th><abbr title="address">voteCount</abbr></th>
+                                {hideVoteCount?'':<th><abbr title="address">voteCount</abbr></th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -81,7 +69,7 @@ export const ProposalList = () => {
                                     <tr key={index}>
                                         <td>{p.id}</td>
                                         <td>{p.description}</td>
-                                        <td>{p.voteCount}</td>
+                                        {hideVoteCount?'':   <td>{p.voteCount}</td>}
                                     </tr>
                                 )}
                             )}

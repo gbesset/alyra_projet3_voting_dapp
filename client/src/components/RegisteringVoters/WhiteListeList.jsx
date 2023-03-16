@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
+import { toastError} from '../../utils/utils.js'
 
  const WhiteListeList = () => {
-    const { state: {accounts, contract, isVoter} } = useEth();
-
-    //const [isWhiteListed, setIsWhiteListed] = useState(false);
-
+    const { state: {accounts, contract, txhash, web3} } = useEth();
     const [whiteList, setWhiteList] = useState([]);
 
     useEffect(() =>{
@@ -15,17 +13,20 @@ import { useEth } from '../../contexts/EthContext';
          */
         async function retrieveRegisteringVotersPastEvents(){
             if(contract){
-              
-               const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
-               
-               let votersAddress = [];
-               voterRegisteredEvents.map((event)=>{
-                    votersAddress.push(event.returnValues.voterAddress);
-                   /* if(accounts[0]===event.returnValues.voterAddress){
-                        setIsWhiteListed(true);
-                    }*/
-                });
-               setWhiteList(votersAddress);
+                try{
+                    const deployTx = await web3.eth.getTransaction(txhash)
+                    const voterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:deployTx.blockNumber , toBlock:"latest"});
+                    
+                    let votersAddress = [];
+                    voterRegisteredEvents.map((event)=>{
+                            votersAddress.push(event.returnValues.voterAddress);
+                        });
+                    setWhiteList(votersAddress);
+                }
+                catch(error){
+                    console.log(error)
+                    toastError("Problem to retrieve votersEvents")
+                }
             }
         }
 
@@ -39,9 +40,6 @@ import { useEth } from '../../contexts/EthContext';
               .on('data', event => {
                 retrieveRegisteringVotersPastEvents();
                 })          
-              .on('changed', changed => console.log(changed))
-              .on('error', err => console.log(err))
-              .on('connected', str => console.log(str))
             }
         }
 

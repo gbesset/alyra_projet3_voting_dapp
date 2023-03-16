@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
+import { toastInfo, toastWarning, toastError} from '../../utils/utils.js'
 
-
-export const VoteForm = () => {
+export const VoteForm = ({voterVote}) => {
 
     const [proposalId, setProposalId] = useState('');
     const [hasVoted, setHasVoted] = useState(false);
@@ -13,18 +13,27 @@ export const VoteForm = () => {
     }
 
     const handleVote = async() =>{
-        if (proposalId && /^\d+$|^$/.test(proposalId)) {
-            await contract.methods.setVote(proposalId).send({from:accounts[0]});
-            setHasVoted(true);
-            setProposalId('');
+        if (proposalId && /^\d+$|^$/.test(proposalId) && proposalId!=0) {
+            try{
+                await contract.methods.setVote(proposalId).call({from:accounts[0]});
+                await contract.methods.setVote(proposalId).send({from:accounts[0]});
+                toastInfo("You voted for proposal id: '"+proposalId+"'")
+                voterVote(proposalId)
+                setHasVoted(true);
+                setProposalId('');
+            }
+            catch(error){
+                console.log(error);
+                toastError("Invalid proposal id: '"+proposalId+"'")    
+            }
         }else{
-              alert("invalid proposal id")
+            toastWarning("Invalid proposal id: '"+proposalId+"'")
             }
         }
 
     return (
         <div className="field">
-        <h3 className="subtitle">Vote for a proposal</h3> hasvoted{hasVoted}
+        <h3 className="subtitle">Vote for a proposal</h3>
         <div className="columns is-centered">
             <div className="column has-text-centered ml-5">
                 <div className="control">

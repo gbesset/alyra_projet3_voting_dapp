@@ -13,19 +13,22 @@ function EthProvider({ children }) {
         const accounts = await web3.eth.requestAccounts();
         const networkID = await web3.eth.net.getId();
         const { abi } = artifact;
-        let address, contract;
+        let address, contract, txhash;
         let isOwner = false;
         let isVoter = false;
         try {
           address = artifact.networks[networkID].address;
+          txhash = artifact.networks[networkID].transactionHash;
           contract = new web3.eth.Contract(abi, address);
           if(contract && accounts){
             const owner = await contract.methods.owner().call({ from: accounts[0] });
             accounts[0] === owner ? isOwner=true : isOwner=false;
           }
           if(contract && accounts){
+            const deployTx = await web3.eth.getTransaction(txhash)
+
               //Need to retrieve whitelist in events because getVoter is for OnlyVoter.
-              const VoterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:0, toBlock:"latest"});
+              const VoterRegisteredEvents = await contract.getPastEvents("VoterRegistered", {fromBlock:deployTx.blockNumber, toBlock:"latest"});
               //find if address is Whitelisted
               const whiteListVoterAddressEvent =  VoterRegisteredEvents.find((event)=>event.returnValues.voterAddress === accounts[0]);                   
               whiteListVoterAddressEvent ? isVoter= true : isVoter=false;;
@@ -35,7 +38,7 @@ function EthProvider({ children }) {
         }
         dispatch({
           type: actions.init,
-          data: { artifact, web3, accounts, networkID, contract, isOwner, isVoter }
+          data: { artifact, web3, accounts, networkID, contract, isOwner, isVoter, txhash }
         });
       }
     }, []);
