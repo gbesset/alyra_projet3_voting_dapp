@@ -27,11 +27,7 @@ export const WorkflowStatus = ({workflowStatus}) => {
             </div>
             </li>
             <li className={`steps-segment ${workflowStatus===WORKFLOW_STATUS.ProposalsRegistrationEnded ? ('is-active'):('')}`}>
-            <span className="steps-marker">
-                <span className="icon">
-                    <i className="fa fa-user"></i>
-                    </span>
-                </span>
+            <span className="steps-marker"></span>
             <div className="steps-content">
                 <p className="is-size-5">ProposalsRegistrationEnded</p>
                 <p className="is-size-6">End of proposals. Wait for the next step</p>
@@ -56,11 +52,7 @@ export const WorkflowStatus = ({workflowStatus}) => {
             </div>
             </li>
             <li className={`steps-segment ${workflowStatus===WORKFLOW_STATUS.VotesTallied ? ('is-active'):('')}`}>
-            <span className="steps-marker">
-                <span className="icon">
-                    <i className="fa fa-user"></i>
-                    </span>
-            </span>
+            <span className="steps-marker"> </span>
             <div className="steps-content">
                 <p className="is-size-5">VotesTallied</p>
                 <p className="is-size-6">Here are the results !</p>
