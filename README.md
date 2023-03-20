@@ -1,22 +1,18 @@
 # Projet 3 : Dapp
 
+## Url de la démo & prod
+- [Vercel url](https://alyra-projet3-voting-dapp.vercel.app/) ou [Netlify url](https://steady-lokum-f99f28.netlify.app/)
+- [Vidéo on loom](https://www.loom.com/share/a62e50eb3b9540eda9f9ad9d0c078523) ou [video youtube](https://youtu.be/FG7npnFLFqI)
 
-https://www.loom.com/share/18e678d10da141fb8e8b83f457939b52
-
-https://www.loom.com/share/05c6eaaf7cb3449d8cc9f5f843bb9cd7
 
 
 ### Schéma structure Application 
 ![Schéma structure Application](/documentation/Application_schema.png)
 
-
-## Getting started
-
-Run `npm start` to start the dev server, and `npm build` to create a production build.
-
-Deploy the smat contract
-
-
+### REX
+- 1ère application react. Beaucoup de temps passé sur context et router. Très content de mon apprentissage. Éventuellement utiliser next la prochaine fois (mais je voulais tout de même appréhender les concepts react dans un premier temps)
+- Test du framework css Bulma. J'utiliserai chakra UI
+- Réalisé en solo faute de news et contraint par un deplacement de 3j en fin de rendu. J'aurai préféré avoir l'info dès le début pour m'organiser en ce sens.
 
 ## Spécifications
 ### Votre Dapp doit permettre : 
@@ -39,7 +35,3 @@ Deploy the smat contract
 - Lien vers votre répertoire Github, comprenant:
 - Lien vers vidéo démo des fonctionnalités de votre Front.
 - Le lien vers un déploiement public de votre dapp (Heroku / GhPages, AWS, Vercel...)
-
----
-## Mise en place
-TODO...

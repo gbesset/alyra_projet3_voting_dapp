@@ -90,7 +90,7 @@ export const VotingSessionStarted = ({upgradeWorkflowStatus}) => {
                 </div>
 
                 
-                {isVoter? <VoteList /> : '' }
+                {isVoter? <VoteList hideVote="true"/> : '' }
                
             </>
 
