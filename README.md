@@ -1,6 +1,23 @@
 # Projet 3 : Dapp
 
 
+https://www.loom.com/share/18e678d10da141fb8e8b83f457939b52
+
+https://www.loom.com/share/05c6eaaf7cb3449d8cc9f5f843bb9cd7
+
+
+### Schéma structure Application 
+![Schéma structure Application](/documentation/Application_schema.png)
+
+
+## Getting started
+
+Run `npm start` to start the dev server, and `npm build` to create a production build.
+
+Deploy the smat contract
+
+
+
 ## Spécifications
 ### Votre Dapp doit permettre : 
 - l’**enregistrement** d’une liste blanche d'électeurs. 
