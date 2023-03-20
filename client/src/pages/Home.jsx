@@ -16,7 +16,7 @@ export const Home = () => {
             <div className="container">
             <div className="columns">
                 <div className="column">
-                <img src="/images/voting.jpg" alt="background" />
+                <img src="https://gbcreation.fr/assets/images/voting.jpg" alt="background" />
                 </div>
                 <div className="column">
                 <div className="is-flex is-flex-direction-column is-justify-content-center h-100">
