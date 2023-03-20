@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useEth } from '../../contexts/EthContext';
 import { toastError} from '../../utils/utils.js'
 
-export const VoteList = () => {
+export const VoteList = ({hideVote=false}) => {
     const { state: {accounts, contract, web3, txhash} } = useEth();
 
     const [voteList, setVoteList] = useState([]);
@@ -62,7 +62,7 @@ export const VoteList = () => {
                         <tr>
                             <th><abbr title="address">Vote id</abbr></th>
                             <th><abbr title="address">address</abbr></th>
-                            <th><abbr title="address">proposalId</abbr></th>
+                            {hideVote?'':<th><abbr title="address">proposalId</abbr></th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -72,7 +72,7 @@ export const VoteList = () => {
                                 <tr key={index} className={accounts[0]=== v.voter ? "is-selected":""}>
                                     <td>{index}</td>
                                     <td>{v.voter}</td>
-                                    <td>{v.proposalId}</td>
+                                    {hideVote?'':<td>{v.proposalId}</td>}
                                 </tr>
                             )}
                         )}
